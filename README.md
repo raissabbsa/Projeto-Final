@@ -1,5 +1,9 @@
 # Proposta de Projeto: Sistema de Biblioteca com Empréstimos
 
+## Como Executar
+Para compilar e executar o projeto, utilize o script de build:
+./build.sh
+
 ## Resumo do Sistema
 O sistema será uma aplicação para gerenciamento de uma biblioteca universitária. Ele permitirá o cadastro de livros, usuários (alunos e professores), e o controle de empréstimos e devoluções. Haverá controle de prazos, cálculo de multas por atraso, histórico de empréstimos. O sistema será controlado por uma interface gráfica intuitiva, permitindo uso por bibliotecários e usuários. Os dados serão armazenados em arquivos.
 
