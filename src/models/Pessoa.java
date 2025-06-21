@@ -1,4 +1,4 @@
-package src.models;
+package models;
 
 public abstract class Pessoa {
     protected String nome;

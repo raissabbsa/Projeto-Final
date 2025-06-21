@@ -21,4 +21,4 @@ echo "✅ Compilação concluída com sucesso!"
 
 # Executa o programa
 echo "Iniciando o programa:"
-java -cp "$BIN_DIR" src.Main
+java -cp "$BIN_DIR" Main

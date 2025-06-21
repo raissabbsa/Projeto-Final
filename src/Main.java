@@ -1,7 +1,6 @@
-package src;
-
-import src.models.Aluno;
-import src.models.Professor;
+import models.Aluno;
+import models.Livro;
+import models.Professor;
 
 public class Main {
     public static void main(String[] args) {
@@ -10,5 +9,15 @@ public class Main {
 
         System.out.println(a);
         System.out.println(p);
+
+        Livro livro = new Livro("O Senhor dos Anéis", "J.R.R. Tolkien", 1954);
+        System.out.println(livro);
+
+        livro.emprestar();
+        System.out.println("Depois do empréstimo: " + livro);
+
+        livro.devolver();
+        System.out.println("Depois da devolução: " + livro);
+
     }
 }
