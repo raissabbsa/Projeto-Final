@@ -23,21 +23,14 @@ public class Main {
         biblioteca.cadastrarLivro(l3);
         biblioteca.cadastrarLivro(l4);
         biblioteca.cadastrarLivro(l5);
-        biblioteca.realizarEmprestimo("O Alienista", aluno);
 
-        // Simular devolução com atraso de 5 dias
-        LocalDate devolucao = LocalDate.now().plusDays(19);
-        biblioteca.registrarDevolucao("O Alienista", devolucao);
+        // Cadastrar e emprestar 3 livros
+        for (int i = 1; i <= 4; i++) {
+            Livro livro = new Livro("Livro " + i, "Autor", 2023);
+            biblioteca.cadastrarLivro(livro);
+            biblioteca.realizarEmprestimo("Livro " + i, aluno);
+        }
 
-        biblioteca.realizarEmprestimo("1984", professor);
-
-        // Mostrar histórico após empréstimo
-        professor.exibirHistorico();
-
-        // Devolver com 3 dias de atraso
-        biblioteca.registrarDevolucao("1984", LocalDate.now().plusDays(17));
-
-        // Mostrar histórico após devolução
-        professor.exibirHistorico();
+        aluno.exibirHistorico();
     }
 }

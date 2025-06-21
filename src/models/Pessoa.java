@@ -7,6 +7,7 @@ public abstract class Pessoa {
     protected String nome;
     protected String cpf;
     protected String email;
+    protected TipoUsuario tipo;
     private List<Emprestimo> historicoEmprestimos;
 
     public Pessoa(String nome, String cpf, String email) {
@@ -41,6 +42,10 @@ public abstract class Pessoa {
         this.email = email;
     }
 
+    public TipoUsuario getTipo() {
+        return tipo;
+    }
+
     public void adicionarEmprestimo(Emprestimo e) {
         historicoEmprestimos.add(e);
     }
@@ -66,7 +71,7 @@ public abstract class Pessoa {
 
     @Override
     public String toString() {
-        return "Nome: " + nome + ", CPF: " + cpf + ", Email: " + email;
+        return "Nome: " + nome + ", CPF: " + cpf + ", Email: " + email + ", Tipo: " + tipo;
     }
 
     public abstract int getLimiteEmprestimos();

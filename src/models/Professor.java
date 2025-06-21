@@ -6,6 +6,7 @@ public class Professor extends Pessoa {
     public Professor(String nome, String cpf, String email, String departamento) {
         super(nome, cpf, email);
         this.departamento = departamento;
+        this.tipo = TipoUsuario.PROFESSOR;
     }
 
     public String getDepartamento() {
