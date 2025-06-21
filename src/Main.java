@@ -28,5 +28,16 @@ public class Main {
         // Simular devolução com atraso de 5 dias
         LocalDate devolucao = LocalDate.now().plusDays(19);
         biblioteca.registrarDevolucao("O Alienista", devolucao);
+
+        biblioteca.realizarEmprestimo("1984", professor);
+
+        // Mostrar histórico após empréstimo
+        professor.exibirHistorico();
+
+        // Devolver com 3 dias de atraso
+        biblioteca.registrarDevolucao("1984", LocalDate.now().plusDays(17));
+
+        // Mostrar histórico após devolução
+        professor.exibirHistorico();
     }
 }

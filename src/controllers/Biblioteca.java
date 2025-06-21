@@ -67,6 +67,7 @@ public class Biblioteca {
 
         Emprestimo emprestimo = new Emprestimo(livro, usuario, hoje, prevista);
         emprestimos.add(emprestimo);
+        usuario.adicionarEmprestimo(emprestimo);
         System.out.println("Empréstimo registrado com sucesso.");
     }
 
@@ -77,6 +78,7 @@ public class Biblioteca {
                 emp.getLivro().devolver();
                 double multa = emp.calcularMulta(dataDevolucao);
                 System.out.println("Devolução realizada. Multa: R$ " + String.format("%.2f", multa));
+                emp.getUsuario().removerEmprestimo(emp);
                 emprestimos.remove(emp);
                 return;
             }
