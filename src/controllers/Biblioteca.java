@@ -48,26 +48,31 @@ public class Biblioteca {
         return null; // ou lançar exceção personalizada
     }
 
-    // Realizar um empréstimo
     public void realizarEmprestimo(String tituloLivro, Pessoa usuario) {
         Livro livro = buscarLivroExato(tituloLivro);
         if (livro == null) {
-            System.out.println("Livro não encontrado."); // adicionar exception
+            System.out.println("Livro não encontrado."); // adicionar exceção personalizada
             return;
         }
 
         if (!livro.isDisponivel()) {
-            System.out.println("Livro indisponível."); // adicionar exception
+            System.out.println("Livro indisponível."); // adicionar exceção personalizada
+            return;
+        }
+
+        if (usuario.getHistoricoEmprestimos().size() >= usuario.getLimiteEmprestimos()) {
+            System.out.println("Usuário atingiu o limite de empréstimos."); // adicionar exceção personalizada
             return;
         }
 
         livro.emprestar();
         LocalDate hoje = LocalDate.now();
-        LocalDate prevista = hoje.plusDays(14); // Prazo padrão: 14 dias
+        LocalDate prevista = hoje.plusDays(14); // Prazo padrão
 
-        Emprestimo emprestimo = new Emprestimo(livro, usuario, hoje, prevista);
-        emprestimos.add(emprestimo);
-        usuario.adicionarEmprestimo(emprestimo);
+        Emprestimo emp = new Emprestimo(livro, usuario, hoje, prevista);
+        emprestimos.add(emp);
+        usuario.adicionarEmprestimo(emp);
+
         System.out.println("Empréstimo registrado com sucesso.");
     }
 

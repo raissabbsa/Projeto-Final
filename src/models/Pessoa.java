@@ -68,4 +68,6 @@ public abstract class Pessoa {
     public String toString() {
         return "Nome: " + nome + ", CPF: " + cpf + ", Email: " + email;
     }
+
+    public abstract int getLimiteEmprestimos();
 }

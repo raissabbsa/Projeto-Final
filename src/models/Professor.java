@@ -20,4 +20,9 @@ public class Professor extends Pessoa {
     public String toString() {
         return super.toString() + ", Departamento: " + departamento + " (Professor)";
     }
+
+    @Override
+    public int getLimiteEmprestimos() {
+        return 5;
+    }
 }

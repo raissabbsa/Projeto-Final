@@ -20,4 +20,9 @@ public class Aluno extends Pessoa {
     public String toString() {
         return super.toString() + ", Matrícula: " + matricula + " (Aluno)";
     }
+
+    @Override
+    public int getLimiteEmprestimos() {
+        return 3;
+    }
 }
