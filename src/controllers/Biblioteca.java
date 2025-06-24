@@ -10,10 +10,29 @@ import java.util.List;
 
 public class Biblioteca {
     private List<Livro> livros;
+    private List<Pessoa> usuarios;
     private List<Emprestimo> emprestimos = new ArrayList<>();
 
     public Biblioteca() {
         this.livros = new ArrayList<>();
+        this.usuarios = new ArrayList<>();
+    }
+
+    public void cadastrarUsuario(Pessoa usuario) {
+        usuarios.add(usuario);
+        System.out.println("Usuario cadastrado: " + usuario.getNome());
+    }
+
+    public boolean removerUsuario(String cpf) {
+        return usuarios.removeIf(u -> u.getCpf().equals(cpf));
+    }
+
+    public Pessoa buscarUsuarioPorCpf(String cpf) {
+        for (Pessoa u : usuarios) {
+            if (u.getCpf().equals(cpf))
+                return u;
+        }
+        return null; // lançar exceção personalizada - usuario não encontrado      
     }
 
     public void cadastrarLivro(Livro livro) {
@@ -25,8 +44,12 @@ public class Biblioteca {
         return livros.removeIf(l -> l.getTitulo().equalsIgnoreCase(titulo));
     }
 
+    public List<Pessoa> listarUsuarios() {
+        return new ArrayList<>(usuarios); // retorna uma cópia dos usuários
+    }
+
     public List<Livro> listarLivros() {
-        return new ArrayList<>(livros); // retorna uma cópia
+        return new ArrayList<>(livros); // retorna uma cópia dos livros
     }
 
     public List<Livro> pesquisarPorTitulo(String trecho) {
@@ -48,8 +71,11 @@ public class Biblioteca {
         return null; // ou lançar exceção personalizada
     }
 
-    public void realizarEmprestimo(String tituloLivro, Pessoa usuario) {
+    // Para realizar o emprestimo, precisa do nome do livro e cpf do usuario, isso evita que emprestimos sejam feitos para livros ou usuarios nao cadastrados ou removidos
+    public void realizarEmprestimo(String tituloLivro, String cpfUsuario) {
         Livro livro = buscarLivroExato(tituloLivro);
+        Pessoa usuario = buscarUsuarioPorCpf(cpfUsuario);
+
         if (livro == null) {
             System.out.println("Livro não encontrado."); // adicionar exceção personalizada
             return;
