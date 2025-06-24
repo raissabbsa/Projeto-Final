@@ -41,3 +41,85 @@ Métodos: cadastrarUsuario(), cadastrarLivro(), realizarEmprestimo(), registrarD
 - Interface Multavel: com método calcularMulta() para polimorfismo
 - Exceção personalizada: LivroIndisponivelException, UsuarioNaoEncontradoException, etc.
 - Utilização de variáveis e métodos estáticos para controle geral (ex: contador de empréstimos)
+
+## Diagrama UML - em progresso
+```mermaid
+---
+title: Sistema Bibliotecário
+---
+classDiagram
+    class Pessoa {
+        -String nome
+        -String cpf
+        -String email
+        -int emprestimosAtivos
+
+        +String toString()
+    }
+
+    class Aluno {
+        -String matricula
+        -TipoUsuario tipoUsuario
+
+        +int emprestimosRestantes()
+    }
+
+    class Professor {
+        -String departamento
+        -TipoUsuario tipoUsuario
+
+        +int emprestimosRestantes()
+    }
+
+    class Livro {
+        -String titulo
+        -String autor
+        -String anoPublicacao
+        -boolean disponivel
+
+        +void emprestar()
+        +void devolver()
+    }
+
+    class Emprestimo {
+        -Livro livro
+        -Pessoa usuario
+        -String dataEmprestimo
+        -String dataPrevista
+        -String dataDevolucao
+        -int multa
+
+        +int calcularMulta()
+        +boolean isAtrasado()
+    }
+
+    class Biblioteca {
+        -ArrayList[Pessoa] listaUsuarios
+        -ArrayList[Livro] listaLivros
+        -ArrayList[Emprestimo] listaEmprestimos
+
+        +void cadastrarUsuario()
+        +void cadastrarLivro()
+        +Emprestimo realizarEmprestimo()
+        +void registrarDevolucao
+        +void ordenarPorTitulo
+        +void ordenarPorAno
+        +void buscarPorTitulo
+    }
+
+    class TipoUsuario {
+        <<Enum>>
+        ALUNO
+        PROFESSOR
+    }
+
+    Pessoa <|-- Aluno : herança
+    Pessoa <|-- Professor : herança
+    Emprestimo <-- Livro : associação
+    Emprestimo <-- Pessoa: associação
+    Biblioteca o-- Pessoa: agregação
+    Biblioteca o-- Livro: agregação
+    Biblioteca o-- Emprestimo: agregação
+    Aluno .. TipoUsuario
+    Professor .. TipoUsuario
+```
