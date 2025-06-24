@@ -1,36 +1,22 @@
-import java.time.LocalDate;
+import controllers.*;
+import models.*;
+import gui.*;
+class Main{
+    public static void main(String[] var0){
+        Livro livro1=new Livro("null", "esqueci",2020),livro2=new Livro("A volta dos que num foram", "Jose Chespirito",0),livro3=new Livro("AAAAAAAAAAA", "Eu",1303);
+        Aluno aluno1=new Aluno("Eu", "452364","E452364","erererrere"),aluno2=new Aluno("Nao eu", "345654","ererer","iriririr");
+        Professor prof1=new Professor("Anastacio", "imecc","kjh@gmail","abafa"),prof2=new Professor("Eugenio", "imecc","grsfvsf@","imecc");
+        Biblioteca bib=new Biblioteca();
 
-import controllers.Biblioteca;
-import models.Aluno;
-import models.Livro;
-import models.Professor;
-
-public class Main {
-    public static void main(String[] args) {
-        Aluno aluno = new Aluno("Carlos", "123.456.789-00", "carlos@email.com", "RA202500");
-        Professor professor = new Professor("Dra. Ana", "987.654.321-00", "ana@universidade.edu", "Engenharia");
-
-        Biblioteca biblioteca = new Biblioteca();
-
-        Livro l1 = new Livro("1984", "George Orwell", 1949);
-        Livro l2 = new Livro("Dom Casmurro", "Machado de Assis", 1899);
-        Livro l3 = new Livro("O Alienista", "Machado de Assis", 1882);
-        Livro l4 = new Livro("O Senhor dos Anéis", "J.R.R. Tolkien", 1954);
-        Livro l5 = new Livro("Harry Potter e a Pedra Filosofal", "J. K. Rowling", 2018);
-
-        biblioteca.cadastrarLivro(l1);
-        biblioteca.cadastrarLivro(l2);
-        biblioteca.cadastrarLivro(l3);
-        biblioteca.cadastrarLivro(l4);
-        biblioteca.cadastrarLivro(l5);
-
-        // Cadastrar e emprestar 3 livros
-        for (int i = 1; i <= 4; i++) {
-            Livro livro = new Livro("Livro " + i, "Autor", 2023);
-            biblioteca.cadastrarLivro(livro);
-            biblioteca.realizarEmprestimo("Livro " + i, aluno);
-        }
-
-        aluno.exibirHistorico();
+        bib.cadastrarLivro(livro1);
+        bib.cadastrarLivro(livro2);
+        bib.cadastrarLivro(livro3);
+        bib.cadastrarUsuario(prof1);
+        bib.cadastrarUsuario(prof2);
+        bib.cadastrarUsuario(aluno1);
+        bib.cadastrarUsuario(aluno2);
+        bib.realizarEmprestimo("null", aluno2);
+        bib.realizarEmprestimo("AAAAAAAAAAA", prof2);
+        new GUI(bib);
     }
 }

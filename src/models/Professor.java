@@ -9,20 +9,13 @@ public class Professor extends Pessoa {
         this.tipo = TipoUsuario.PROFESSOR;
     }
 
-    public String getDepartamento() {
-        return departamento;
-    }
+    public String getDepartamento(){return departamento;}
+    public void setDepartamento(String departamento){this.departamento = departamento;}
 
-    public void setDepartamento(String departamento) {
-        this.departamento = departamento;
-    }
-
-    @Override
     public String toString() {
         return super.toString() + ", Departamento: " + departamento + " (Professor)";
     }
 
-    @Override
     public int getLimiteEmprestimos() {
         return 5;
     }

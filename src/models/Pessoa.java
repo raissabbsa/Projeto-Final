@@ -18,59 +18,30 @@ public abstract class Pessoa {
 
     }
 
-    public String getNome() {
-        return nome;
-    }
+    public String getNome(){return nome;}
+    public String getCpf(){return cpf;}
+    public String getEmail(){return email;}
+    public void setNome(String nome){this.nome = nome;}
+    public void setCpf(String cpf){this.cpf = cpf;}
+    public void setEmail(String email){this.email = email;}
+    public TipoUsuario getTipo(){return tipo;}
+    public void adicionarEmprestimo(Emprestimo e){historicoEmprestimos.add(e);}
+    public void removerEmprestimo(Emprestimo e){historicoEmprestimos.remove(e);}
+    public List<Emprestimo> getHistoricoEmprestimos(){return new ArrayList<>(historicoEmprestimos);}
 
-    public String getCpf() {
-        return cpf;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public TipoUsuario getTipo() {
-        return tipo;
-    }
-
-    public void adicionarEmprestimo(Emprestimo e) {
-        historicoEmprestimos.add(e);
-    }
-
-    public void removerEmprestimo(Emprestimo e) {
-        historicoEmprestimos.remove(e);
-    }
-
-    public List<Emprestimo> getHistoricoEmprestimos() {
-        return new ArrayList<>(historicoEmprestimos);
-    }
-
-    public void exibirHistorico() {
+    public String exibirHistorico() {
         if (historicoEmprestimos.isEmpty()) {
-            System.out.println("Nenhum empréstimo registrado para " + nome);
+            return ("Nenhum empréstimo registrado para " + nome);
         } else {
-            System.out.println("Histórico de empréstimos de " + nome + ":");
+            String str="Histórico de empréstimos de " + nome + ":\n";
             for (Emprestimo e : historicoEmprestimos) {
-                System.out.println("- " + e);
+                str+=("- " + e+"\n");
             }
+            return str;
         }
     }
 
-    @Override
-    public String toString() {
+    public String toString(){
         return "Nome: " + nome + ", CPF: " + cpf + ", Email: " + email + ", Tipo: " + tipo;
     }
 
