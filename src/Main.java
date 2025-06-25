@@ -27,11 +27,27 @@ public class Main {
         biblioteca.cadastrarUsuario(aluno_carlos);
         biblioteca.cadastrarUsuario(professor_ana);
 
+        try {
+            biblioteca.realizarEmprestimo("1982", aluno_carlos.getCpf());
+        }
+        catch (exceptions.UsuarioNaoCadastradoException |
+                exceptions.NenhumLivroEncontradoException |
+                exceptions.LivroIndisponivelException |
+                exceptions.LimiteEmprestimosException e) {
+        }
+
         // Cadastrar e emprestar 3 livros
         for (int i = 1; i <= 4; i++) {
             Livro livro = new Livro("Livro " + i, "Autor", 2023);
             biblioteca.cadastrarLivro(livro);
-            biblioteca.realizarEmprestimo("Livro " + i, aluno_carlos.getCpf());
+            try {
+                biblioteca.realizarEmprestimo("Livro " + i, aluno_carlos.getCpf());
+            } 
+            catch (exceptions.UsuarioNaoCadastradoException |
+                    exceptions.NenhumLivroEncontradoException |
+                    exceptions.LivroIndisponivelException |
+                    exceptions.LimiteEmprestimosException e) {
+            }
         }
 
         aluno_carlos.exibirHistorico();

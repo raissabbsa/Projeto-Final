@@ -43,14 +43,26 @@ public class Livro {
 
     public void emprestar() {
         if (!disponivel) {
-            throw new IllegalStateException("O livro já está emprestado.");
+            try {
+                throw new IllegalStateException("O livro já está emprestado.");
+            }
+            catch (IllegalStateException e) {
+                System.out.println(e.getMessage());
+                return;
+            }
         }
         this.disponivel = false;
     }
 
     public void devolver() {
         if (disponivel) {
-            throw new IllegalStateException("O livro já está disponível.");
+            try {
+                throw new IllegalStateException("O livro já está disponível.");
+            }
+            catch (IllegalStateException e) {
+                System.out.println(e.getMessage());
+                return;
+            }
         }
         this.disponivel = true;
     }
