@@ -8,6 +8,12 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import exceptions.UsuarioNaoCadastradoException;
+import exceptions.NenhumLivroEncontradoException;
+import exceptions.LivroIndisponivelException;
+import exceptions.LimiteEmprestimosException;
+import exceptions.NenhumEmprestimoEncontradoException;
+
 public class Biblioteca {
     private List<Livro> livros;
     private List<Pessoa> usuarios;
@@ -27,12 +33,18 @@ public class Biblioteca {
         return usuarios.removeIf(u -> u.getCpf().equals(cpf));
     }
 
-    public Pessoa buscarUsuarioPorCpf(String cpf) {
+    public Pessoa buscarUsuarioPorCpf(String cpf) throws UsuarioNaoCadastradoException {
         for (Pessoa u : usuarios) {
             if (u.getCpf().equals(cpf))
                 return u;
         }
-        return null; // lançar exceção personalizada - usuario não encontrado      
+        try {
+            throw new UsuarioNaoCadastradoException("Usuário com CPF - " + cpf + " - não encontrado.");
+        }
+        catch (UsuarioNaoCadastradoException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }  
     }
 
     public void cadastrarLivro(Livro livro) {
@@ -52,43 +64,83 @@ public class Biblioteca {
         return new ArrayList<>(livros); // retorna uma cópia dos livros
     }
 
-    public List<Livro> pesquisarPorTitulo(String trecho) {
+    public List<Livro> pesquisarPorTitulo(String trecho) throws NenhumLivroEncontradoException {
         List<Livro> encontrados = new ArrayList<>();
         for (Livro l : livros) {
             if (l.getTitulo().toLowerCase().contains(trecho.toLowerCase())) {
                 encontrados.add(l);
             }
         }
+        if (encontrados.isEmpty()) {
+            try {
+                throw new NenhumLivroEncontradoException("Nenhum livro encontrado com o trecho: " + trecho);
+            }
+            catch (NenhumLivroEncontradoException e) {
+                System.out.println(e.getMessage());
+                return null;
+            }
+        }
         return encontrados;
     }
 
-    public Livro buscarLivroExato(String titulo) {
+    public Livro buscarLivroExato(String titulo) throws NenhumLivroEncontradoException {
         for (Livro l : livros) {
             if (l.getTitulo().equalsIgnoreCase(titulo)) {
                 return l;
             }
         }
-        return null; // ou lançar exceção personalizada
+        try {
+            throw new NenhumLivroEncontradoException("Nenhum livro encontrado com o titulo: " + titulo);
+        }
+        catch (NenhumLivroEncontradoException e) {
+            System.out.println(e.getMessage());
+            return null;
+        }
     }
 
     // Para realizar o emprestimo, precisa do nome do livro e cpf do usuario, isso evita que emprestimos sejam feitos para livros ou usuarios nao cadastrados ou removidos
-    public void realizarEmprestimo(String tituloLivro, String cpfUsuario) {
+    public void realizarEmprestimo(String tituloLivro, String cpfUsuario) throws UsuarioNaoCadastradoException, NenhumLivroEncontradoException, LivroIndisponivelException, LimiteEmprestimosException {
         Livro livro = buscarLivroExato(tituloLivro);
         Pessoa usuario = buscarUsuarioPorCpf(cpfUsuario);
 
-        if (livro == null) {
-            System.out.println("Livro não encontrado."); // adicionar exceção personalizada
-            return;
+        if (livro == null) { 
+            try {
+                throw new NenhumLivroEncontradoException("Nenhum livro encontrado com o titulo: " + tituloLivro);
+            }
+            catch (NenhumLivroEncontradoException e) {
+                // mensagem ja impressa em buscarLivroExato
+                return;
+            }
+        }
+
+        if (usuario == null) { 
+            try{
+                throw new UsuarioNaoCadastradoException("Usuário com CPF - " + cpfUsuario + " - não encontrado.");
+            }
+            catch (UsuarioNaoCadastradoException e) {
+                // mensagem ja impressa em buscarUsuarioPorCpf
+                return;
+            }
         }
 
         if (!livro.isDisponivel()) {
-            System.out.println("Livro indisponível."); // adicionar exceção personalizada
-            return;
+            try {
+                throw new LivroIndisponivelException("Livro - " + tituloLivro + " - não está disponível.");
+            }
+            catch (LivroIndisponivelException e) {
+                System.out.println(e.getMessage());
+                return;
+            }
         }
 
         if (usuario.getHistoricoEmprestimos().size() >= usuario.getLimiteEmprestimos()) {
-            System.out.println("Usuário atingiu o limite de empréstimos."); // adicionar exceção personalizada
-            return;
+            try {
+                throw new LimiteEmprestimosException("Usuário - " + usuario.getNome() + " - atingiu o limite de empréstimos.");
+            }
+            catch (LimiteEmprestimosException e) {
+                System.out.println(e.getMessage());
+                return;
+            }
         }
 
         livro.emprestar();
@@ -103,7 +155,7 @@ public class Biblioteca {
     }
 
     // Registrar devolução
-    public void registrarDevolucao(String tituloLivro, LocalDate dataDevolucao) {
+    public void registrarDevolucao(String tituloLivro, LocalDate dataDevolucao) throws NenhumEmprestimoEncontradoException {
         for (Emprestimo emp : emprestimos) {
             if (emp.getLivro().getTitulo().equalsIgnoreCase(tituloLivro)) {
                 emp.getLivro().devolver();
@@ -114,6 +166,12 @@ public class Biblioteca {
                 return;
             }
         }
-        System.out.println("Empréstimo não encontrado.");
+        try {
+            throw new NenhumEmprestimoEncontradoException("Nenhum empréstimo encontrado para o livro: " + tituloLivro);
+        }
+        catch (NenhumEmprestimoEncontradoException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
     }
 }
