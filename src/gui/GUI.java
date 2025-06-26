@@ -1,6 +1,9 @@
 package gui;
 
 import controllers.*;
+import exceptions.LimiteEmprestimosException;
+import exceptions.NenhumLivroEncontradoException;
+import exceptions.UsuarioNaoCadastradoException;
 import java.awt.*;
 import java.awt.event.*;
 import java.time.LocalDate;
@@ -8,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import javax.swing.*;
 import models.*;
+import exceptions.*;
 
 public class GUI implements ActionListener{
     Biblioteca library;
@@ -146,8 +150,7 @@ public class GUI implements ActionListener{
             
             int result = JOptionPane.showOptionDialog(null, myPanel, "Cadastre o livro:", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, blank, null, 0);
             if (result == JOptionPane.OK_OPTION) {
-                switch(library.realizarEmprestimo(xField.getText(),yField.getText())){
-                case 1:
+                try{library.realizarEmprestimo(xField.getText(),yField.getText());
                     int maxidx=library.listarEmprestimos().size()-1;
                     JLabel empri=new JLabel();
                     empri.setBorder(BorderFactory.createRaisedBevelBorder());
@@ -162,20 +165,20 @@ public class GUI implements ActionListener{
                     panel_empres.add(empri);
                     panel_empres.add(buttoni);
                     panel_livros.getComponent(library.listarLivros().indexOf(library.buscarLivroExato(xField.getText()))+1).setEnabled(false);
-                break;
-                case 0:
+                }
+                catch(NenhumLivroEncontradoException a){
                     JOptionPane.showMessageDialog(null,"Livro nao encontrado", null, JOptionPane.OK_OPTION,null);
-                break;
-                case -1:
+                }
+                catch(LivroIndisponivelException a){
                     JOptionPane.showMessageDialog(null,"Livro indisponivel", null, JOptionPane.OK_OPTION,null);
-                break;
-                case -2:
+                }
+                catch(UsuarioNaoCadastradoException a){
                     JOptionPane.showMessageDialog(null,"Usuario nao encontrado", null, JOptionPane.OK_OPTION,null);
-                break;
-                case -3:
+                }
+                catch(LimiteEmprestimosException a){
                     JOptionPane.showMessageDialog(null,"Usuario atingiu o limite de emprestimos", null, JOptionPane.OK_OPTION,null);
-                break;
-            }}
+                }
+            }
             panel_empres.setVisible(false);
             panel_empres.setVisible(true);
         }
@@ -187,7 +190,7 @@ public class GUI implements ActionListener{
         }
         else if(e.getSource() instanceof JButtonDevolucao){
             Emprestimo emprs=((JButtonDevolucao)e.getSource()).empres;
-            library.registrarDevolucao(emprs,LocalDate.now());
+            try{library.registrarDevolucao(emprs.getLivro().getTitulo(),LocalDate.now());
             Component[] components = panel_empres.getComponents();
             ArrayList<Component> componentList=new ArrayList<>(Arrays.asList(components));
             int idx = componentList.indexOf((JButtonDevolucao)e.getSource());
@@ -198,6 +201,9 @@ public class GUI implements ActionListener{
             panel_empres.setVisible(true);
             JOptionPane.showMessageDialog(null,"Multa calculada: R$"+emprs.calcularMulta(LocalDate.now()), "Devolução concluida", JOptionPane.OK_OPTION,blank);
         }
+        catch(NenhumEmprestimoEncontradoException a){
+            JOptionPane.showMessageDialog(null,"Emprestimo não encontrado", null, JOptionPane.OK_OPTION,null);
+        }}
     }
 
 
