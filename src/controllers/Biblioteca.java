@@ -1,5 +1,6 @@
 package controllers;
 
+import exceptions.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,63 +21,58 @@ public class Biblioteca {
     public void cadastrarLivro(Livro livro){livros.add(livro);}
     public boolean removerLivro(String titulo){return livros.removeIf(l -> l.getTitulo().equalsIgnoreCase(titulo));}
     public List<Livro> listarLivros(){return new ArrayList<>(livros);}
-    public List<Livro> pesquisarPorTitulo(String trecho) {
+    public List<Livro> pesquisarPorTitulo(String trecho) throws NenhumLivroEncontradoException {
         List<Livro> encontrados = new ArrayList<>();
         for (Livro l : livros) {
             if (l.getTitulo().toLowerCase().contains(trecho.toLowerCase())) {
                 encontrados.add(l);
             }
         }
+        if (encontrados.isEmpty()) {
+            throw new NenhumLivroEncontradoException("Nenhum livro encontrado com o trecho: " + trecho);
+        }
         return encontrados;
     }
-
-    public Livro buscarLivroExato(String titulo) {
+    public Livro buscarLivroExato(String titulo) throws NenhumLivroEncontradoException {
         for (Livro l : livros) {
             if (l.getTitulo().equalsIgnoreCase(titulo)) {
                 return l;
             }
         }
-        return null; // ou lançar exceção personalizada
+        throw new NenhumLivroEncontradoException("Nenhum livro encontrado com o titulo: " + titulo);
     }
 
     public void cadastrarUsuario(Pessoa livro){usuarios.add(livro);}
     public boolean removerUsuario(String titulo) {return usuarios.removeIf(l -> l.getNome().equalsIgnoreCase(titulo));}
     public List<Pessoa> listarUsuarios() {return new ArrayList<>(usuarios);}
-    public List<Pessoa> pesquisarPorNome(String trecho) {
-        List<Pessoa> encontrados = new ArrayList<>();
-        for (Pessoa l : usuarios) {
-            if (l.getNome().toLowerCase().contains(trecho.toLowerCase())) {
-                encontrados.add(l);
-            }
+    public Pessoa buscarUsuarioExato(String cpf) throws UsuarioNaoCadastradoException {
+        for (Pessoa u : usuarios) {
+            if (u.getCpf().equals(cpf)){
+                return u;}
         }
-        return encontrados;
-    }
-    public Pessoa buscarUsuarioExato(String titulo) {
-        for (Pessoa l : usuarios) {
-            if (l.getNome().equalsIgnoreCase(titulo)) {
-                return l;
-            }
-        }
-        return null; // ou lançar exceção personalizada
+        throw new UsuarioNaoCadastradoException("Usuário com CPF - " + cpf + " - não encontrado.");
+        
     }
 
     public List<Emprestimo> listarEmprestimos() {return new ArrayList<>(emprestimos);}
-    public int realizarEmprestimo(String tituloLivro, String user){
-        Pessoa usuario=buscarUsuarioExato(user);
+    public void realizarEmprestimo(String tituloLivro, String cpfUsuario) throws UsuarioNaoCadastradoException, NenhumLivroEncontradoException, LivroIndisponivelException, LimiteEmprestimosException {
         Livro livro = buscarLivroExato(tituloLivro);
-        if (livro == null) {
-            return 0;
+        Pessoa usuario = buscarUsuarioExato(cpfUsuario);
+
+        if (livro == null) { 
+            throw new NenhumLivroEncontradoException("Nenhum livro encontrado com o titulo: " + tituloLivro);
         }
+
         if (usuario == null) {
-            return -2;
+                throw new UsuarioNaoCadastradoException("Usuário com CPF - " + cpfUsuario + " - não encontrado.");
         }
 
         if (!livro.isDisponivel()) {
-            return -1;
+            throw new LivroIndisponivelException("Livro - " + tituloLivro + " - não está disponível.");
         }
 
         if (usuario.getHistoricoEmprestimos().size() >= usuario.getLimiteEmprestimos()) {
-            return -3;
+            throw new LimiteEmprestimosException("Usuário - " + usuario.getNome() + " - atingiu o limite de empréstimos.");
         }
 
         livro.emprestar();
@@ -86,15 +82,19 @@ public class Biblioteca {
         Emprestimo emp = new Emprestimo(livro, usuario, hoje, prevista);
         emprestimos.add(emp);
         usuario.adicionarEmprestimo(emp);
-        return 1;
     }
 
     // Registrar devolução
-    public String registrarDevolucao(Emprestimo emprestimo, LocalDate dataDevolucao) {
-        emprestimo.getLivro().devolver();
-        double multa = emprestimo.calcularMulta(dataDevolucao);
-        emprestimo.getUsuario().removerEmprestimo(emprestimo);
-        emprestimos.remove(emprestimo);
-        return ("Devolução realizada. Multa: R$ " + String.format("%.2f", multa));
+    public void registrarDevolucao(String tituloLivro, LocalDate dataDevolucao) throws NenhumEmprestimoEncontradoException {
+        for (Emprestimo emp : emprestimos) {
+            if (emp.getLivro().getTitulo().equalsIgnoreCase(tituloLivro)) {
+                emp.getLivro().devolver();
+                double multa = emp.calcularMulta(dataDevolucao);
+                emp.getUsuario().removerEmprestimo(emp);
+                emprestimos.remove(emp);
+                return;
+            }
+        }
+        throw new NenhumEmprestimoEncontradoException("Nenhum empréstimo encontrado para o livro: " + tituloLivro);
     }
 }
