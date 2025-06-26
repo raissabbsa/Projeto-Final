@@ -15,7 +15,7 @@ public class GUI implements ActionListener{
     JRadioButton alun,prof;
     JPanel panel_livros,panel_usuarios,panel_empres;
     JScrollPane scroll_livros,scroll_usuarios,scroll_empres;
-    ImageIcon blank=new ImageIcon("gui/blank.png"),defaultAvatar=new ImageIcon("gui/default_avatar.jpg"),defaultBook=new ImageIcon("gui/default_book.png"),missingBook=new ImageIcon("gui/missing_book.png");
+    ImageIcon blank=new ImageIcon("gui/blank.png"),defaultBook=new ImageIcon("gui/default_book.png"),missingBook=new ImageIcon("gui/missing_book.png");
     boolean select1;
 
     public void actionPerformed(ActionEvent e){
@@ -103,7 +103,7 @@ public class GUI implements ActionListener{
                 Aluno newaluno=new Aluno(xField.getText(),yField.getText(),zField.getText(),wField.getText());
                 library.cadastrarUsuario(newaluno);
                 JLabel newppl=new JLabel();
-                newppl.setIcon(defaultAvatar);
+                newppl.setIcon(randomAvatar());
                 newppl.setText("<html><pre>Nome: "+newaluno.getNome()+"\t\tOcupação: "+newaluno.getClass().getSimpleName()+"<br>CPF: "+newaluno.getCpf()+"\t\tEmail: "+newaluno.getEmail()+"<br>Matricula: "+newaluno.getMatricula()+"</pre></html>");
                 newppl.setFont(new Font("Arial",Font.PLAIN,20));
                 newppl.setPreferredSize(new Dimension(1200,100));
@@ -117,7 +117,7 @@ public class GUI implements ActionListener{
                 Professor newaluno=new Professor(xField.getText(),yField.getText(),zField.getText(),wField.getText());
                 library.cadastrarUsuario(newaluno);
                 JLabel newppl=new JLabel();
-                newppl.setIcon(defaultAvatar);
+                newppl.setIcon(randomAvatar());
                 newppl.setText("<html><pre>Nome: "+newaluno.getNome()+"\t\tOcupação: "+newaluno.getClass().getSimpleName()+"<br>CPF: "+newaluno.getCpf()+"\t\tEmail: "+newaluno.getEmail()+"<br>Departamento: "+newaluno.getDepartamento()+"<pre/></html>");
                 newppl.setFont(new Font("Arial",Font.PLAIN,20));
                 newppl.setPreferredSize(new Dimension(1200,100));
@@ -146,22 +146,36 @@ public class GUI implements ActionListener{
             
             int result = JOptionPane.showOptionDialog(null, myPanel, "Cadastre o livro:", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, blank, null, 0);
             if (result == JOptionPane.OK_OPTION) {
-                library.realizarEmprestimo(xField.getText(),library.buscarUsuarioExato(yField.getText()));
-                int maxidx=library.listarUsuarios().size();
-                JLabel empri=new JLabel();
-                empri.setBorder(BorderFactory.createRaisedBevelBorder());
-                empri.setText("<html><pre>Livro: "+library.listarEmprestimos().get(maxidx).getLivro().getTitulo()+"\t\tUsuario: "+library.listarEmprestimos().get(maxidx).getUsuario().getNome()+"<br>Data emprestimo: "+library.listarEmprestimos().get(maxidx).getDataEmprestimo()+"<br>Data limite: "+library.listarEmprestimos().get(maxidx).getDataPrevista()+"</pre></html>");
-                empri.setFont(new Font("Arial",Font.PLAIN,20));
-                empri.setPreferredSize(new Dimension(1200,100));
-                panel_empres.add(empri);
-                JButtonDevolucao buttoni=new JButtonDevolucao(library.listarEmprestimos().get(maxidx));
-                buttoni.setText("Cadastrar devolução");
-                buttoni.setPreferredSize(new Dimension(200,100));
-                buttoni.addActionListener(this);
-                panel_empres.add(empri);
-                panel_empres.add(buttoni);
-                panel_livros.getComponent(library.listarLivros().indexOf(library.buscarLivroExato(xField.getText()))).setEnabled(false);
-            }
+                switch(library.realizarEmprestimo(xField.getText(),yField.getText())){
+                case 1:
+                    int maxidx=library.listarEmprestimos().size()-1;
+                    JLabel empri=new JLabel();
+                    empri.setBorder(BorderFactory.createRaisedBevelBorder());
+                    empri.setText("<html><pre>Livro: "+library.listarEmprestimos().get(maxidx).getLivro().getTitulo()+"\t\tUsuario: "+library.listarEmprestimos().get(maxidx).getUsuario().getNome()+"<br>Data emprestimo: "+library.listarEmprestimos().get(maxidx).getDataEmprestimo()+"<br>Data limite: "+library.listarEmprestimos().get(maxidx).getDataPrevista()+"</pre></html>");
+                    empri.setFont(new Font("Arial",Font.PLAIN,20));
+                    empri.setPreferredSize(new Dimension(1200,100));
+                    panel_empres.add(empri);
+                    JButtonDevolucao buttoni=new JButtonDevolucao(library.listarEmprestimos().get(maxidx));
+                    buttoni.setText("Cadastrar devolução");
+                    buttoni.setPreferredSize(new Dimension(200,100));
+                    buttoni.addActionListener(this);
+                    panel_empres.add(empri);
+                    panel_empres.add(buttoni);
+                    panel_livros.getComponent(library.listarLivros().indexOf(library.buscarLivroExato(xField.getText()))+1).setEnabled(false);
+                break;
+                case 0:
+                    JOptionPane.showMessageDialog(null,"Livro nao encontrado", null, JOptionPane.OK_OPTION,null);
+                break;
+                case -1:
+                    JOptionPane.showMessageDialog(null,"Livro indisponivel", null, JOptionPane.OK_OPTION,null);
+                break;
+                case -2:
+                    JOptionPane.showMessageDialog(null,"Usuario nao encontrado", null, JOptionPane.OK_OPTION,null);
+                break;
+                case -3:
+                    JOptionPane.showMessageDialog(null,"Usuario atingiu o limite de emprestimos", null, JOptionPane.OK_OPTION,null);
+                break;
+            }}
             panel_empres.setVisible(false);
             panel_empres.setVisible(true);
         }
@@ -182,16 +196,33 @@ public class GUI implements ActionListener{
             panel_livros.getComponent(library.listarLivros().indexOf(emprs.getLivro())+1).setEnabled(true);
             panel_empres.setVisible(false);
             panel_empres.setVisible(true);
+            JOptionPane.showMessageDialog(null,"Multa calculada: R$"+emprs.calcularMulta(LocalDate.now()), "Devolução concluida", JOptionPane.OK_OPTION,blank);
         }
     }
 
 
-    public void update_panel_livros(){
-        for(Component i : panel_livros.getComponents()){
-            if(i instanceof JLabel){
-
-            }
+    public ImageIcon randomAvatar(){
+        Double rng=Math.random();
+        if(rng<0.1){
+            return new ImageIcon("gui/pfp1.jpg");
+        }if(rng<0.2){
+            return new ImageIcon("gui/pfp2.jpg");
+        }if(rng<0.3){
+            return new ImageIcon("gui/pfp3.jpg");
+        }if (rng<0.4){
+            return new ImageIcon("gui/pfp4.jpg");
+        }if(rng<0.5){
+            return new ImageIcon("gui/pfp5.jpg");
+        }if(rng<0.6){
+            return new ImageIcon("gui/pfp6.jpg");
+        }if(rng<0.7){
+            return new ImageIcon("gui/pfp7.jpg");
+        }if(rng<0.8){
+            return new ImageIcon("gui/pfp8.jpg");
+        }if(rng<0.9){
+            return new ImageIcon("gui/pfp9.jpg");
         }
+        return new ImageIcon("gui/default_avatar.jpg");
     }
 
 
@@ -260,7 +291,7 @@ public class GUI implements ActionListener{
         String fill=new String();
         for(Pessoa i : library.listarUsuarios()){
             JLabel useri=new JLabel();
-            useri.setIcon(defaultAvatar);
+            useri.setIcon(randomAvatar());
             if(i instanceof Aluno){
                 fill="<br>Matricula: "+((Aluno)i).getMatricula();}
             else if(i instanceof Professor){

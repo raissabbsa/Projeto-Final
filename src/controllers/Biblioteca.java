@@ -61,21 +61,22 @@ public class Biblioteca {
     }
 
     public List<Emprestimo> listarEmprestimos() {return new ArrayList<>(emprestimos);}
-    public void realizarEmprestimo(String tituloLivro, Pessoa usuario) {
+    public int realizarEmprestimo(String tituloLivro, String user){
+        Pessoa usuario=buscarUsuarioExato(user);
         Livro livro = buscarLivroExato(tituloLivro);
         if (livro == null) {
-            System.out.println("Livro não encontrado."); // adicionar exceção personalizada
-            return;
+            return 0;
+        }
+        if (usuario == null) {
+            return -2;
         }
 
         if (!livro.isDisponivel()) {
-            System.out.println("Livro indisponível."); // adicionar exceção personalizada
-            return;
+            return -1;
         }
 
         if (usuario.getHistoricoEmprestimos().size() >= usuario.getLimiteEmprestimos()) {
-            System.out.println("Usuário atingiu o limite de empréstimos."); // adicionar exceção personalizada
-            return;
+            return -3;
         }
 
         livro.emprestar();
@@ -84,7 +85,8 @@ public class Biblioteca {
 
         Emprestimo emp = new Emprestimo(livro, usuario, hoje, prevista);
         emprestimos.add(emp);
-        usuario.adicionarEmprestimo(emp);;
+        usuario.adicionarEmprestimo(emp);
+        return 1;
     }
 
     // Registrar devolução
