@@ -1,18 +1,13 @@
+
 package controllers;
 
-import models.Emprestimo;
-import models.Livro;
-import models.Pessoa;
-
+import exceptions.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-import exceptions.UsuarioNaoCadastradoException;
-import exceptions.NenhumLivroEncontradoException;
-import exceptions.LivroIndisponivelException;
-import exceptions.LimiteEmprestimosException;
-import exceptions.NenhumEmprestimoEncontradoException;
+import models.Emprestimo;
+import models.Livro;
+import models.Pessoa;
 
 public class Biblioteca {
     private List<Livro> livros;
@@ -21,49 +16,12 @@ public class Biblioteca {
 
     public Biblioteca() {
         this.livros = new ArrayList<>();
-        this.usuarios = new ArrayList<>();
+        this.usuarios=new ArrayList<>();
     }
 
-    public void cadastrarUsuario(Pessoa usuario) {
-        usuarios.add(usuario);
-        System.out.println("Usuario cadastrado: " + usuario.getNome());
-    }
-
-    public boolean removerUsuario(String cpf) {
-        return usuarios.removeIf(u -> u.getCpf().equals(cpf));
-    }
-
-    public Pessoa buscarUsuarioPorCpf(String cpf) throws UsuarioNaoCadastradoException {
-        for (Pessoa u : usuarios) {
-            if (u.getCpf().equals(cpf))
-                return u;
-        }
-        try {
-            throw new UsuarioNaoCadastradoException("Usuário com CPF - " + cpf + " - não encontrado.");
-        }
-        catch (UsuarioNaoCadastradoException e) {
-            System.out.println(e.getMessage());
-            return null;
-        }  
-    }
-
-    public void cadastrarLivro(Livro livro) {
-        livros.add(livro);
-        System.out.println("Livro cadastrado: " + livro.getTitulo());
-    }
-
-    public boolean removerLivro(String titulo) {
-        return livros.removeIf(l -> l.getTitulo().equalsIgnoreCase(titulo));
-    }
-
-    public List<Pessoa> listarUsuarios() {
-        return new ArrayList<>(usuarios); // retorna uma cópia dos usuários
-    }
-
-    public List<Livro> listarLivros() {
-        return new ArrayList<>(livros); // retorna uma cópia dos livros
-    }
-
+    public void cadastrarLivro(Livro livro){livros.add(livro);}
+    public boolean removerLivro(String titulo){return livros.removeIf(l -> l.getTitulo().equalsIgnoreCase(titulo));}
+    public List<Livro> listarLivros(){return new ArrayList<>(livros);}
     public List<Livro> pesquisarPorTitulo(String trecho) throws NenhumLivroEncontradoException {
         List<Livro> encontrados = new ArrayList<>();
         for (Livro l : livros) {
@@ -72,75 +30,50 @@ public class Biblioteca {
             }
         }
         if (encontrados.isEmpty()) {
-            try {
-                throw new NenhumLivroEncontradoException("Nenhum livro encontrado com o trecho: " + trecho);
-            }
-            catch (NenhumLivroEncontradoException e) {
-                System.out.println(e.getMessage());
-                return null;
-            }
+            throw new NenhumLivroEncontradoException("Nenhum livro encontrado com o trecho: " + trecho);
         }
         return encontrados;
     }
-
     public Livro buscarLivroExato(String titulo) throws NenhumLivroEncontradoException {
         for (Livro l : livros) {
             if (l.getTitulo().equalsIgnoreCase(titulo)) {
                 return l;
             }
         }
-        try {
-            throw new NenhumLivroEncontradoException("Nenhum livro encontrado com o titulo: " + titulo);
-        }
-        catch (NenhumLivroEncontradoException e) {
-            System.out.println(e.getMessage());
-            return null;
-        }
+        throw new NenhumLivroEncontradoException("Nenhum livro encontrado com o titulo: " + titulo);
     }
 
-    // Para realizar o emprestimo, precisa do nome do livro e cpf do usuario, isso evita que emprestimos sejam feitos para livros ou usuarios nao cadastrados ou removidos
+    public void cadastrarUsuario(Pessoa livro){usuarios.add(livro);}
+    public boolean removerUsuario(String titulo) {return usuarios.removeIf(l -> l.getNome().equalsIgnoreCase(titulo));}
+    public List<Pessoa> listarUsuarios() {return new ArrayList<>(usuarios);}
+    public Pessoa buscarUsuarioExato(String cpf) throws UsuarioNaoCadastradoException {
+        for (Pessoa u : usuarios) {
+            if (u.getCpf().equals(cpf)){
+                return u;}
+        }
+        throw new UsuarioNaoCadastradoException("Usuário com CPF - " + cpf + " - não encontrado.");
+        
+    }
+
+    public List<Emprestimo> listarEmprestimos() {return new ArrayList<>(emprestimos);}
     public void realizarEmprestimo(String tituloLivro, String cpfUsuario) throws UsuarioNaoCadastradoException, NenhumLivroEncontradoException, LivroIndisponivelException, LimiteEmprestimosException {
         Livro livro = buscarLivroExato(tituloLivro);
-        Pessoa usuario = buscarUsuarioPorCpf(cpfUsuario);
+        Pessoa usuario = buscarUsuarioExato(cpfUsuario);
 
         if (livro == null) { 
-            try {
-                throw new NenhumLivroEncontradoException("Nenhum livro encontrado com o titulo: " + tituloLivro);
-            }
-            catch (NenhumLivroEncontradoException e) {
-                // mensagem ja impressa em buscarLivroExato
-                return;
-            }
+            throw new NenhumLivroEncontradoException("Nenhum livro encontrado com o titulo: " + tituloLivro);
         }
 
-        if (usuario == null) { 
-            try{
+        if (usuario == null) {
                 throw new UsuarioNaoCadastradoException("Usuário com CPF - " + cpfUsuario + " - não encontrado.");
-            }
-            catch (UsuarioNaoCadastradoException e) {
-                // mensagem ja impressa em buscarUsuarioPorCpf
-                return;
-            }
         }
 
         if (!livro.isDisponivel()) {
-            try {
-                throw new LivroIndisponivelException("Livro - " + tituloLivro + " - não está disponível.");
-            }
-            catch (LivroIndisponivelException e) {
-                System.out.println(e.getMessage());
-                return;
-            }
+            throw new LivroIndisponivelException("Livro - " + tituloLivro + " - não está disponível.");
         }
 
         if (usuario.getHistoricoEmprestimos().size() >= usuario.getLimiteEmprestimos()) {
-            try {
-                throw new LimiteEmprestimosException("Usuário - " + usuario.getNome() + " - atingiu o limite de empréstimos.");
-            }
-            catch (LimiteEmprestimosException e) {
-                System.out.println(e.getMessage());
-                return;
-            }
+            throw new LimiteEmprestimosException("Usuário - " + usuario.getNome() + " - atingiu o limite de empréstimos.");
         }
 
         livro.emprestar();
@@ -150,8 +83,6 @@ public class Biblioteca {
         Emprestimo emp = new Emprestimo(livro, usuario, hoje, prevista);
         emprestimos.add(emp);
         usuario.adicionarEmprestimo(emp);
-
-        System.out.println("Empréstimo registrado com sucesso.");
     }
 
     // Registrar devolução
@@ -160,18 +91,11 @@ public class Biblioteca {
             if (emp.getLivro().getTitulo().equalsIgnoreCase(tituloLivro)) {
                 emp.getLivro().devolver();
                 double multa = emp.calcularMulta(dataDevolucao);
-                System.out.println("Devolução realizada. Multa: R$ " + String.format("%.2f", multa));
                 emp.getUsuario().removerEmprestimo(emp);
                 emprestimos.remove(emp);
                 return;
             }
         }
-        try {
-            throw new NenhumEmprestimoEncontradoException("Nenhum empréstimo encontrado para o livro: " + tituloLivro);
-        }
-        catch (NenhumEmprestimoEncontradoException e) {
-            System.out.println(e.getMessage());
-            return;
-        }
+        throw new NenhumEmprestimoEncontradoException("Nenhum empréstimo encontrado para o livro: " + tituloLivro);
     }
 }

@@ -9,20 +9,13 @@ public class Aluno extends Pessoa {
         this.tipo = TipoUsuario.ALUNO;
     }
 
-    public String getMatricula() {
-        return matricula;
-    }
+    public String getMatricula(){return matricula;}
+    public void setMatricula(String matricula){this.matricula = matricula;}
 
-    public void setMatricula(String matricula) {
-        this.matricula = matricula;
-    }
-
-    @Override
     public String toString() {
         return super.toString() + ", Matrícula: " + matricula + " (Aluno)";
     }
 
-    @Override
     public int getLimiteEmprestimos() {
         return 3;
     }

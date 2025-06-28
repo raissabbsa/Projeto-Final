@@ -1,5 +1,3 @@
-# Proposta de Projeto: Sistema de Biblioteca com Empréstimos
-
 ## Como Executar
 Para compilar e executar o projeto, utilize o script de build:
 ./build.sh
@@ -127,3 +125,4 @@ classDiagram
     Aluno .. TipoUsuario
     Professor .. TipoUsuario
 ```
+

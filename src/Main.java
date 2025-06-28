@@ -1,9 +1,8 @@
 import java.time.LocalDate;
 
 import controllers.Biblioteca;
-import models.Aluno;
-import models.Livro;
-import models.Professor;
+import models.*;
+import gui.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -52,4 +51,5 @@ public class Main {
 
         aluno_carlos.exibirHistorico();
     }
+
 }
