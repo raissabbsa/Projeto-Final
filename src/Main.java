@@ -50,6 +50,8 @@ public class Main {
         }
 
         aluno_carlos.exibirHistorico();
+
+        new GUI(biblioteca);
     }
 
 }
