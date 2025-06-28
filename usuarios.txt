@@ -1,0 +1,2 @@
+ALUNO,Carlos Andrade,123.456.789-00,carlos@email.com,RA202500
+PROFESSOR,Dra. Ana,987.654.321-00,ana@universidade.edu,Engenharia
