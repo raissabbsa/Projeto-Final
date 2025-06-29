@@ -12,9 +12,11 @@ public class TelaRemoverUsuario extends JFrame {
     private JLabel labelInfo;
 
     private Biblioteca biblioteca;
+    private GUI gui;
 
-    public TelaRemoverUsuario(Biblioteca biblioteca) {
+    public TelaRemoverUsuario(Biblioteca biblioteca,GUI gui) {
         this.biblioteca = biblioteca;
+        this.gui=gui;
 
         setTitle("Remover Usuário");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -57,12 +59,14 @@ public class TelaRemoverUsuario extends JFrame {
     private void removerUsuario(ActionEvent e) {
         String cpf = campoCpfBusca.getText().trim();
         try {
+            gui.removerUsuario(cpf);
             biblioteca.removerUsuario(cpf);
             JOptionPane.showMessageDialog(this, "Usuário removido com sucesso.");
+            gui.panel_usuarios.setVisible(false);
+            gui.panel_usuarios.setVisible(true);
             dispose();
         } catch (UsuarioNaoCadastradoException ex) {
             JOptionPane.showMessageDialog(this, "Erro: " + ex.getMessage());
         }
     }
 }
-

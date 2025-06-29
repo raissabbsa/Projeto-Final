@@ -1,4 +1,3 @@
-
 package controllers;
 
 import exceptions.*;
@@ -71,7 +70,6 @@ public class Biblioteca {
             return;
         }
         usuarios.remove(usuario);
-        System.out.println("Usuário removido com sucesso: " + usuario.getNome());
     }
 
     public List<Pessoa> listarUsuarios() {
@@ -213,7 +211,6 @@ public class Biblioteca {
     }
 
     public void salvarEmprestimosEmArquivo() {
-        System.out.println("Emprestimos a salvar: " + emprestimos.size());
         try (BufferedWriter bw = new BufferedWriter(new FileWriter("emprestimos.txt"))) {
             for (Emprestimo e : emprestimos) {
                 bw.write(

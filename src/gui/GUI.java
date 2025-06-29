@@ -18,8 +18,8 @@ public class GUI implements ActionListener {
     JScrollPane scroll_livros, scroll_usuarios, scroll_empres;
     JTextField campoBuscaLivro;
     JButton botaoBuscarLivro;
-    ImageIcon blank = new ImageIcon("src/gui/blank.png"), defaultBook = new ImageIcon("src/gui/default_book.png"),
-            missingBook = new ImageIcon("src/gui/missing_book.png");
+    ImageIcon blank = new ImageIcon("gui/blank.png"), defaultBook = new ImageIcon("gui/default_book.png"),
+            missingBook = new ImageIcon("gui/missing_book.png");
     boolean select1;
 
     public void actionPerformed(ActionEvent e) {
@@ -140,19 +140,9 @@ public class GUI implements ActionListener {
             
             int result = JOptionPane.showOptionDialog(null, myPanel, "Cadastre o usuario:", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, blank, null, 0);
             if (result == JOptionPane.OK_OPTION) {
-                if (!alun.isSelected() && !prof.isSelected()) {
-                    JOptionPane.showMessageDialog(null, "Selecione se o usuário é Aluno ou Professor!");
-                    return;
-                }
+                int maxidx=library.listarUsuarios().size();
                 if(alun.isSelected()){
                     Aluno newaluno=new Aluno(xField.getText(),yField.getText(),zField.getText(),wField.getText());
-                    if (xField.getText().trim().isEmpty() ||
-                        yField.getText().trim().isEmpty() ||
-                        zField.getText().trim().isEmpty() ||
-                        wField.getText().trim().isEmpty()) {
-                        JOptionPane.showMessageDialog(null, "Preencha todos os campos obrigatórios para Aluno!");
-                        return;
-                    }
                     library.cadastrarUsuario(newaluno);
                     JLabel newppl=new JLabel();
                     newppl.setIcon(randomAvatar());
@@ -167,14 +157,8 @@ public class GUI implements ActionListener {
                     panel_usuarios.add(buttoni);}
                 else{
                     Departamento departamento = (Departamento) deptoCombo.getSelectedItem();
+
                     Professor newaluno=new Professor(xField.getText(),yField.getText(),zField.getText(),departamento);
-                    if (xField.getText().trim().isEmpty() ||
-                        yField.getText().trim().isEmpty() ||
-                        zField.getText().trim().isEmpty() ||
-                        deptoCombo.getSelectedItem() == null) {
-                        JOptionPane.showMessageDialog(null, "Preencha todos os campos obrigatórios para Professor!");
-                        return;
-                    }
                     library.cadastrarUsuario(newaluno);
                     JLabel newppl=new JLabel();
                     newppl.setIcon(randomAvatar());
@@ -202,7 +186,7 @@ public class GUI implements ActionListener {
             myPanel.add(new JLabel("Livro:"));
             myPanel.add(xField);
             myPanel.add(Box.createHorizontalStrut(15));
-            myPanel.add(new JLabel("Usuario (CPF):"));
+            myPanel.add(new JLabel("Usuario:"));
             myPanel.add(yField);
 
             int result = JOptionPane.showOptionDialog(null, myPanel, "Cadastre o livro:", JOptionPane.OK_CANCEL_OPTION,
@@ -297,33 +281,60 @@ public class GUI implements ActionListener {
     public ImageIcon randomAvatar() {
         Double rng = Math.random();
         if (rng < 0.1) {
-            return new ImageIcon("src/gui/pfp1.jpg");
+            return new ImageIcon("gui/pfp1.jpg");
         }
         if (rng < 0.2) {
-            return new ImageIcon("src/gui/pfp2.jpg");
+            return new ImageIcon("gui/pfp2.jpg");
         }
         if (rng < 0.3) {
-            return new ImageIcon("src/gui/pfp3.jpg");
+            return new ImageIcon("gui/pfp3.jpg");
         }
         if (rng < 0.4) {
-            return new ImageIcon("src/gui/pfp4.jpg");
+            return new ImageIcon("gui/pfp4.jpg");
         }
         if (rng < 0.5) {
-            return new ImageIcon("src/gui/pfp5.jpg");
+            return new ImageIcon("gui/pfp5.jpg");
         }
         if (rng < 0.6) {
-            return new ImageIcon("src/gui/pfp6.jpg");
+            return new ImageIcon("gui/pfp6.jpg");
         }
         if (rng < 0.7) {
-            return new ImageIcon("src/gui/pfp7.jpg");
+            return new ImageIcon("gui/pfp7.jpg");
         }
         if (rng < 0.8) {
-            return new ImageIcon("src/gui/pfp8.jpg");
+            return new ImageIcon("gui/pfp8.jpg");
         }
         if (rng < 0.9) {
-            return new ImageIcon("src/gui/pfp9.jpg");
+            return new ImageIcon("gui/pfp9.jpg");
         }
-        return new ImageIcon("src/gui/default_avatar.jpg");
+        return new ImageIcon("gui/default_avatar.jpg");
+    }
+
+    public void removerUsuario(String cpf){
+        try{
+            Pessoa usuario = library.buscarUsuarioExato(cpf);
+            int idx=library.listarUsuarios().indexOf(usuario);
+            panel_usuarios.remove(idx*2+3);
+            panel_usuarios.remove(2*idx+3);
+        }
+        catch(UsuarioNaoCadastradoException a){
+            JOptionPane.showMessageDialog(null,"Usuario nao encontrado", null, JOptionPane.OK_OPTION,null);
+        }
+    }
+
+    public void editarUsuario(String cpf,String nome,String email,String extra){
+        try{
+            Pessoa usuario = library.buscarUsuarioExato(cpf);
+            int idx=library.listarUsuarios().indexOf(usuario);
+            Component u=panel_usuarios.getComponent(idx*2+3);
+            if (extra.indexOf("R")==0 && extra.indexOf("A")==1){
+                ((JLabel) u).setText("<html><pre>Nome: "+nome+"\t\tOcupação: "+"Aluno"+"<br>CPF: "+cpf+"\t\tEmail: "+email+"<br>Matricula: "+extra+"</pre></html>");
+            }
+            else{((JLabel) u).setText("<html><pre>Nome: "+nome+"\t\tOcupação: "+"Professor"+"<br>CPF: "+cpf+"\t\tEmail: "+email+"<br>Departamento: "+extra+"</pre></html>");}
+        }
+        catch(UsuarioNaoCadastradoException a){
+            JOptionPane.showMessageDialog(null,"Usuario nao encontrado", null, JOptionPane.OK_OPTION,null);
+        }
     }
 
     public GUI(Biblioteca library) {
@@ -384,7 +395,6 @@ public class GUI implements ActionListener {
         moarBook.setFont(new Font("Arial", Font.BOLD, 20));
         moarBook.addActionListener(this);
         panel_livros.add(moarBook);
-        panel_livros.add(Box.createRigidArea(new Dimension(0, 20)));
         for (Livro i : library.listarLivros()) {
             JLabel booki = new JLabel();
             booki.setIcon(defaultBook);
@@ -397,7 +407,6 @@ public class GUI implements ActionListener {
                 booki.setEnabled(false);
             }
             panel_livros.add(booki);
-            panel_livros.add(Box.createRigidArea(new Dimension(0, 20)));
             panel_livros.revalidate();
             panel_livros.repaint();
         }
@@ -413,14 +422,14 @@ public class GUI implements ActionListener {
         button_editar.setPreferredSize(new Dimension(250, 100));
         button_editar.setText("Editar Usuário");
         button_editar.setFont(new Font("Arial", Font.BOLD, 20));
-        button_editar.addActionListener(e -> new TelaEditarUsuario(library));
+        button_editar.addActionListener(e -> new TelaEditarUsuario(library,this));
         panel_usuarios.add(button_editar);
 
         button_remover = new JButton();
         button_remover.setPreferredSize(new Dimension(250, 100));
         button_remover.setText("Remover Usuário");
         button_remover.setFont(new Font("Arial", Font.BOLD, 20));
-        button_remover.addActionListener(e -> new TelaRemoverUsuario(library));
+        button_remover.addActionListener(e -> new TelaRemoverUsuario(library,this));
         panel_usuarios.add(button_remover);
 
 
