@@ -18,8 +18,8 @@ public class GUI implements ActionListener {
     JScrollPane scroll_livros, scroll_usuarios, scroll_empres;
     JTextField campoBuscaLivro;
     JButton botaoBuscarLivro;
-    ImageIcon blank = new ImageIcon("gui/blank.png"), defaultBook = new ImageIcon("gui/default_book.png"),
-            missingBook = new ImageIcon("gui/missing_book.png");
+    ImageIcon blank = new ImageIcon("src/gui/blank.png"), defaultBook = new ImageIcon("src/gui/default_book.png"),
+            missingBook = new ImageIcon("src/gui/missing_book.png");
     boolean select1;
 
     public void actionPerformed(ActionEvent e) {
@@ -281,33 +281,33 @@ public class GUI implements ActionListener {
     public ImageIcon randomAvatar() {
         Double rng = Math.random();
         if (rng < 0.1) {
-            return new ImageIcon("gui/pfp1.jpg");
+            return new ImageIcon("src/gui/pfp1.jpg");
         }
         if (rng < 0.2) {
-            return new ImageIcon("gui/pfp2.jpg");
+            return new ImageIcon("src/gui/pfp2.jpg");
         }
         if (rng < 0.3) {
-            return new ImageIcon("gui/pfp3.jpg");
+            return new ImageIcon("src/gui/pfp3.jpg");
         }
         if (rng < 0.4) {
-            return new ImageIcon("gui/pfp4.jpg");
+            return new ImageIcon("src/gui/pfp4.jpg");
         }
         if (rng < 0.5) {
-            return new ImageIcon("gui/pfp5.jpg");
+            return new ImageIcon("src/gui/pfp5.jpg");
         }
         if (rng < 0.6) {
-            return new ImageIcon("gui/pfp6.jpg");
+            return new ImageIcon("src/gui/pfp6.jpg");
         }
         if (rng < 0.7) {
-            return new ImageIcon("gui/pfp7.jpg");
+            return new ImageIcon("src/gui/pfp7.jpg");
         }
         if (rng < 0.8) {
-            return new ImageIcon("gui/pfp8.jpg");
+            return new ImageIcon("src/gui/pfp8.jpg");
         }
         if (rng < 0.9) {
-            return new ImageIcon("gui/pfp9.jpg");
+            return new ImageIcon("src/gui/pfp9.jpg");
         }
-        return new ImageIcon("gui/default_avatar.jpg");
+        return new ImageIcon("src/gui/default_avatar.jpg");
     }
 
     public void removerUsuario(String cpf){
