@@ -46,21 +46,6 @@ public class Main {
                 exceptions.LimiteEmprestimosException e) {
         }
 
-        // Cadastrar e emprestar 3 livros
-        for (int i = 1; i <= 4; i++) {
-            Livro livro = new Livro("Livro " + i, "Autor", 2023);
-            biblioteca.cadastrarLivro(livro);
-            try {
-                biblioteca.realizarEmprestimo("Livro " + i, aluno_carlos.getCpf());
-            } 
-            catch (exceptions.UsuarioNaoCadastradoException |
-                    exceptions.NenhumLivroEncontradoException |
-                    exceptions.LivroIndisponivelException |
-                    exceptions.LimiteEmprestimosException e) {
-            }
-        }
-
-        aluno_carlos.exibirHistorico();
         new GUI(biblioteca);
     }
 }

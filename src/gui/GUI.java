@@ -278,7 +278,6 @@ public class GUI implements ActionListener{
         panel_menus.setBounds(0,0,1200,50);
         panel_menus.setLayout(new GridLayout());
         panel_livros=new JPanel();
-        panel_livros.setPreferredSize(new Dimension(1200,8000));
         panel_livros.setBounds(0,50,1200,800);
         panel_livros.setLayout(new BoxLayout(panel_livros,BoxLayout.PAGE_AXIS));
         panel_usuarios=new JPanel();
