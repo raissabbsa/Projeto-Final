@@ -128,7 +128,6 @@ public class Biblioteca {
             if (emp.getLivro().getTitulo().equalsIgnoreCase(tituloLivro)) {
                 emp.getLivro().devolver();
                 double multa = emp.calcularMulta(dataDevolucao);
-                emp.getUsuario().removerEmprestimo(emp);
                 emprestimos.remove(emp);
                 return;
             }
