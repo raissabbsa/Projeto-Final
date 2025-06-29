@@ -14,8 +14,8 @@ O Hobbit,J.R.R. Tolkien,1937,true
 Moby Dick,Herman Melville,1851,true
 A Revolução dos Bichos,George Orwell,1945,true
 O Código Da Vinci,Dan Brown,2003,true
-Dom Quixote,Miguel de Cervantes,1605,true
-A Metamorfose,Franz Kafka,1915,true
+Dom Quixote,Miguel de Cervantes,1605,false
+A Metamorfose,Franz Kafka,1915,false
 Grande Sertão: Veredas,João Guimarães Rosa,1956,true
 Senhora,José de Alencar,1875,true
 O conde enfeitiçado: O livro de Francesca ,Julia Quinn,2015,true
