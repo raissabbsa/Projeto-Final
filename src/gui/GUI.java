@@ -273,7 +273,7 @@ public class GUI implements ActionListener {
             int idx = componentList.indexOf((JButtonDevolucao)e.getSource());
             panel_empres.remove((JButtonDevolucao)e.getSource());
             panel_empres.remove(idx-1);
-            panel_livros.getComponent(library.listarLivros().indexOf(emprs.getLivro())+2).setEnabled(true);
+            panel_livros.getComponent(library.listarLivros().indexOf(emprs.getLivro())+3).setEnabled(true);
             panel_empres.setVisible(false);
             panel_empres.setVisible(true);
             JOptionPane.showMessageDialog(null,"Multa calculada: R$"+emprs.calcularMulta(LocalDate.now()), "Devolução concluida", JOptionPane.OK_OPTION,blank);
