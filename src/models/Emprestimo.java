@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
 public class Emprestimo implements Multavel {
-    private static int totalEmprestimosRealizados = 0;
+    public static int totalEmprestimosRealizados = 0;
     
     private Livro livro;
     private Pessoa usuario;
@@ -18,6 +18,7 @@ public class Emprestimo implements Multavel {
         this.dataEmprestimo = dataEmprestimo;
         this.dataPrevista = dataPrevista;
         this.ativo = true; // Define o empréstimo como ativo ao ser criado
+        totalEmprestimosRealizados++;
     }
 
     public Livro getLivro(){return livro;}
@@ -25,6 +26,9 @@ public class Emprestimo implements Multavel {
     public LocalDate getDataEmprestimo(){return dataEmprestimo;}
     public LocalDate getDataPrevista(){return dataPrevista;}
     public boolean isAtrasado(LocalDate dataDevolucaoReal){return dataDevolucaoReal.isAfter(dataPrevista);}
+    public static int getTotalEmprestimosRealizados() {
+        return totalEmprestimosRealizados;
+    }
     public boolean isAtivo() {
         return ativo;
     }
