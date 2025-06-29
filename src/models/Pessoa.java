@@ -54,7 +54,8 @@ public abstract class Pessoa {
         } else {
             String str="Histórico de empréstimos de " + nome + ":\n";
             for (Emprestimo e : historicoEmprestimos) {
-                str+=("- " + e+"\n");
+                String status = e.isAtivo() ? " (Ativo)" : " (Finalizado)";
+                str += "- " + e + status + "\n";
             }
             return str;
         }

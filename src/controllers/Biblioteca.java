@@ -128,6 +128,7 @@ public class Biblioteca {
             if (emp.getLivro().getTitulo().equalsIgnoreCase(tituloLivro)) {
                 emp.getLivro().devolver();                
                 emp.finalizarEmprestimo(); 
+                salvarEmprestimosEmArquivo();
                 return;
             }
         }
