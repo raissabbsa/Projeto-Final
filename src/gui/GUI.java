@@ -391,13 +391,6 @@ public class GUI implements ActionListener {
         moarPpl.addActionListener(this);
         panel_usuarios.add(moarPpl);
 
-        button_editar = new JButton();
-        button_editar.setPreferredSize(new Dimension(240, 100));
-        button_editar.setText("Editar Usuário");
-        button_editar.setFont(new Font("Arial", Font.BOLD, 20));
-        button_editar.addActionListener(e -> new TelaEditarUsuario(library));
-        panel_usuarios.add(button_editar);
-
         String fill = new String();
 
         button_editar = new JButton();

@@ -2,11 +2,10 @@ package gui;
 
 import controllers.Biblioteca;
 import exceptions.UsuarioNaoCadastradoException;
-import models.*;
-
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import javax.swing.*;
+import models.*;
 
 public class TelaEditarUsuario extends JFrame {
     private JTextField campoCpfBusca;
@@ -69,7 +68,7 @@ public class TelaEditarUsuario extends JFrame {
                 campoExtra.setText(((Aluno) p).getMatricula());
                 labelExtra.setText("Matrícula:");
             } else if (p instanceof Professor) {
-                campoExtra.setText(((Professor) p).getDepartamento());
+                campoExtra.setText(((Professor) p).getDepartamento().name());
                 labelExtra.setText("Departamento:");
             }
         } catch (Exception ex) {

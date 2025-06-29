@@ -1,13 +1,13 @@
 
 package controllers;
 
-import java.io.*;
 import exceptions.*;
+import java.io.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
 import models.Aluno;
+import models.Departamento;
 import models.Emprestimo;
 import models.Livro;
 import models.Pessoa;
@@ -161,7 +161,8 @@ public class Biblioteca {
                     Aluno a = new Aluno(nome, cpf, email, extra);
                     usuarios.add(a);
                 } else if (tipo.equals("PROFESSOR")) {
-                    Professor p = new Professor(nome, cpf, email, extra);
+                    Departamento departamento = Departamento.valueOf(extra); // converte String em Enum
+                    Professor p = new Professor(nome, cpf, email, departamento);
                     usuarios.add(p);
                 }
             }
@@ -251,7 +252,8 @@ public class Biblioteca {
         if (u instanceof Aluno) {
             ((Aluno) u).setMatricula(novoExtra);
         } else if (u instanceof Professor) {
-            ((Professor) u).setDepartamento(novoExtra);
+            Departamento novoDepto = Departamento.valueOf(novoExtra);
+            ((Professor) u).setDepartamento(novoDepto);
         }
     }
 }
