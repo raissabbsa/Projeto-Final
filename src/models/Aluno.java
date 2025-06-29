@@ -8,6 +8,11 @@ public class Aluno extends Pessoa {
         this.matricula = matricula;
         this.tipo = TipoUsuario.ALUNO;
     }
+    public Aluno(String pfp,String nome, String cpf, String email, String matricula) {
+        super(pfp, nome, cpf, email);
+        this.matricula = matricula;
+        this.tipo = TipoUsuario.ALUNO;
+    }
 
     public String getMatricula(){return matricula;}
     public void setMatricula(String matricula){this.matricula = matricula;}

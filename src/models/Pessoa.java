@@ -2,12 +2,14 @@ package models;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.ImageIcon;
 
 public abstract class Pessoa {
     protected String nome;
     protected String cpf;
     protected String email;
     protected TipoUsuario tipo;
+    protected ImageIcon pfp=null;
     private List<Emprestimo> historicoEmprestimos;
 
     public Pessoa(String nome, String cpf, String email) {
@@ -16,6 +18,13 @@ public abstract class Pessoa {
         this.email = email;
         this.historicoEmprestimos = new ArrayList<>();
 
+    }
+    public Pessoa(String pfp,String nome, String cpf, String email) {
+        this.nome = nome;
+        this.cpf = cpf;
+        this.email = email;
+        this.historicoEmprestimos = new ArrayList<>();
+        this.pfp= new ImageIcon(pfp);
     }
 
     public String getNome(){return nome;}
@@ -46,8 +55,4 @@ public abstract class Pessoa {
     }
 
     public abstract int getLimiteEmprestimos();
-    
-    public int getNumeroEmprestimosAtivos() {
-        return this.historicoEmprestimos.size();
-    }
 }
