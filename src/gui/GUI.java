@@ -1,9 +1,7 @@
 package gui;
 
 import controllers.*;
-import exceptions.LimiteEmprestimosException;
-import exceptions.NenhumLivroEncontradoException;
-import exceptions.UsuarioNaoCadastradoException;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.time.LocalDate;
@@ -19,6 +17,8 @@ public class GUI implements ActionListener{
     JRadioButton alun,prof;
     JPanel panel_livros,panel_usuarios,panel_empres;
     JScrollPane scroll_livros,scroll_usuarios,scroll_empres;
+    JTextField campoBuscaLivro;
+    JButton botaoBuscarLivro;
     ImageIcon blank=new ImageIcon("gui/blank.png"),defaultBook=new ImageIcon("gui/default_book.png"),missingBook=new ImageIcon("gui/missing_book.png");
     boolean select1;
 
@@ -44,6 +44,22 @@ public class GUI implements ActionListener{
             panel_usuarios.setVisible(false);
             panel_empres.setVisible(true);
             panel_livros.setVisible(false);}
+        if(e.getSource() == botaoBuscarLivro){
+            String titulo = campoBuscaLivro.getText();
+            try {
+                Livro livro = library.buscarLivroExato(titulo);
+                JOptionPane.showMessageDialog(null, 
+                    "Livro encontrado:\nTítulo: " + livro.getTitulo() + 
+                    "\nAutor: " + livro.getAutor() + 
+                    "\nAno: " + livro.getAnoPublicacao(), 
+                    "Resultado da busca", JOptionPane.INFORMATION_MESSAGE);
+            } catch (NenhumLivroEncontradoException ex) {
+                JOptionPane.showMessageDialog(null, 
+                    "Livro não encontrado!", 
+                    "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+            return;
+        }
         else if(e.getSource()==moarBook){
             JTextField xField = new JTextField(5);
             JTextField yField = new JTextField(5);
@@ -240,7 +256,6 @@ public class GUI implements ActionListener{
         panel_menus.setBounds(0,0,1200,50);
         panel_menus.setLayout(new GridLayout());
         panel_livros=new JPanel();
-        panel_livros.setPreferredSize(new Dimension(1200,8000));
         panel_livros.setBounds(0,50,1200,800);
         panel_livros.setLayout(new BoxLayout(panel_livros,BoxLayout.PAGE_AXIS));
         panel_usuarios=new JPanel();
@@ -271,6 +286,18 @@ public class GUI implements ActionListener{
         button_empres.addActionListener(this);
         panel_menus.add(button_empres);
 
+        JPanel painelBusca = new JPanel();
+        painelBusca.setAlignmentX(Component.LEFT_ALIGNMENT);
+        painelBusca.setPreferredSize(new Dimension(240,100));
+        painelBusca.add(new JLabel("Buscar livro pelo título:"));
+        campoBuscaLivro = new JTextField(20);
+        painelBusca.add(campoBuscaLivro);
+        botaoBuscarLivro = new JButton("Buscar Livro");
+        botaoBuscarLivro.setFont(new Font("Arial", Font.BOLD, 20));
+        botaoBuscarLivro.addActionListener(this);
+        painelBusca.add(botaoBuscarLivro);
+        panel_livros.add(painelBusca);
+
         moarBook=new JButton();
         moarBook.setPreferredSize(new Dimension(240,100));
         moarBook.setText("Adicionar Livro");
@@ -286,6 +313,8 @@ public class GUI implements ActionListener{
             booki.setPreferredSize(new Dimension(1200,100));
             if (!i.isDisponivel()){booki.setEnabled(false);}
             panel_livros.add(booki);
+            panel_livros.revalidate();
+            panel_livros.repaint();
         }
         
         moarPpl=new JButton();

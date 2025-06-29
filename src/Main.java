@@ -35,7 +35,7 @@ public class Main {
                 exceptions.LimiteEmprestimosException e) {
         }
 
-        // Cadastrar e emprestar 3 livros
+        // Cadastrar e emprestar 4 livros
         for (int i = 1; i <= 4; i++) {
             Livro livro = new Livro("Livro " + i, "Autor", 2023);
             biblioteca.cadastrarLivro(livro);
