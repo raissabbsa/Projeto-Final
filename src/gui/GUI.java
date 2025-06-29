@@ -411,7 +411,7 @@ public class GUI implements ActionListener {
         button_editar.setPreferredSize(new Dimension(250, 100));
         button_editar.setText("Editar Usuário");
         button_editar.setFont(new Font("Arial", Font.BOLD, 20));
-        button_editar.addActionListener(e -> new TelaEditarUsuario(library));
+        button_editar.addActionListener(e -> new TelaEditarUsuario(library, this));
         panel_usuarios.add(button_editar);
 
         button_remover = new JButton();
@@ -497,5 +497,34 @@ public class GUI implements ActionListener {
         frame.add(scroll_empres);
         frame.add(scroll_usuarios);
         frame.add(scroll_livros);
+    }
+
+    public void atualizarListaUsuarios() {
+        panel_usuarios.removeAll();
+        panel_usuarios.add(moarPpl);
+        panel_usuarios.add(button_editar);
+        panel_usuarios.add(button_remover);
+
+        for (Pessoa i : library.listarUsuarios()) {
+            JLabel useri = new JLabel();
+            useri.setIcon(randomAvatar());
+            String fill = "";
+            if(i instanceof Aluno){
+                fill="<br>Matricula: "+((Aluno)i).getMatricula();
+            } else if(i instanceof Professor){
+                fill="<br>Departamento: "+((Professor)i).getDepartamento().getNomeFormatado();
+            }
+            useri.setText("<html><pre>Nome: "+i.getNome()+"\t\tOcupação: "+i.getClass().getSimpleName()+"<br>CPF: "+i.getCpf()+"\t\tEmail: "+i.getEmail()+fill+"</pre></html>");
+            useri.setFont(new Font("Arial",Font.PLAIN,20));
+            useri.setPreferredSize(new Dimension(1200,100));
+            JButtonHistorico buttoni = new JButtonHistorico(i);
+            buttoni.setText("Emprestimos atuais");
+            buttoni.setPreferredSize(new Dimension(200, 100));
+            buttoni.addActionListener(this);
+            panel_usuarios.add(useri);
+            panel_usuarios.add(buttoni);
+        }
+        panel_usuarios.revalidate();
+        panel_usuarios.repaint();
     }
 }
