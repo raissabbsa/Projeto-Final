@@ -37,7 +37,10 @@ public abstract class Pessoa {
     public void adicionarEmprestimo(Emprestimo e){historicoEmprestimos.add(e);}
     public void removerEmprestimo(Emprestimo e){historicoEmprestimos.remove(e);}
     public List<Emprestimo> getHistoricoEmprestimos(){return new ArrayList<>(historicoEmprestimos);}
-
+    public int getNumeroEmprestimosAtivos() {
+        return historicoEmprestimos.size();
+    }
+    
     public String exibirHistorico() {
         if (historicoEmprestimos.isEmpty()) {
             return ("Nenhum empréstimo registrado para " + nome);
