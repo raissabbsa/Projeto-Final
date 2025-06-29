@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
 public class Emprestimo implements Multavel {
+    private static int totalEmprestimosRealizados = 0;
+    
     private Livro livro;
     private Pessoa usuario;
     private LocalDate dataEmprestimo;
@@ -14,14 +16,34 @@ public class Emprestimo implements Multavel {
         this.usuario = usuario;
         this.dataEmprestimo = dataEmprestimo;
         this.dataPrevista = dataPrevista;
+        totalEmprestimosRealizados++;
     }
 
-    public Livro getLivro(){return livro;}
-    public Pessoa getUsuario(){return usuario;}
-    public LocalDate getDataEmprestimo(){return dataEmprestimo;}
-    public LocalDate getDataPrevista(){return dataPrevista;}
-    public boolean isAtrasado(LocalDate dataDevolucaoReal){return dataDevolucaoReal.isAfter(dataPrevista);}
+    public Livro getLivro() {
+        return livro;
+    }
 
+    public Pessoa getUsuario() {
+        return usuario;
+    }
+
+    public LocalDate getDataEmprestimo() {
+        return dataEmprestimo;
+    }
+
+    public LocalDate getDataPrevista() {
+        return dataPrevista;
+    }
+    
+    public static int getTotalEmprestimosRealizados() {
+        return totalEmprestimosRealizados;
+    }
+
+    public boolean isAtrasado(LocalDate dataDevolucaoReal) {
+        return dataDevolucaoReal.isAfter(dataPrevista);
+    }
+
+    @Override
     public double calcularMulta(LocalDate dataDevolucaoReal) {
         if (isAtrasado(dataDevolucaoReal)) {
             long diasAtraso = ChronoUnit.DAYS.between(dataPrevista, dataDevolucaoReal);
@@ -30,6 +52,7 @@ public class Emprestimo implements Multavel {
         return 0.0;
     }
 
+    @Override
     public String toString() {
         return "Livro: " + livro.getTitulo() + ", Usuário: " + usuario.getNome() +
                 ", Empréstimo: " + dataEmprestimo + ", Prevista: " + dataPrevista;

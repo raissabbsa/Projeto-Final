@@ -18,6 +18,7 @@ public class GUI implements ActionListener {
     JScrollPane scroll_livros, scroll_usuarios, scroll_empres;
     JTextField campoBuscaLivro;
     JButton botaoBuscarLivro;
+    JLabel livTotalEmprestimos;
     ImageIcon blank = new ImageIcon("src/gui/blank.png"), defaultBook = new ImageIcon("src/gui/default_book.png"),
             missingBook = new ImageIcon("src/gui/missing_book.png");
     boolean select1;
@@ -194,6 +195,8 @@ public class GUI implements ActionListener {
             if (result == JOptionPane.OK_OPTION) {
                 try {
                     library.realizarEmprestimo(xField.getText(), yField.getText());
+                    atualizarContadorGeral();
+                    atualizarPainelUsuarios();
                     int maxidx = library.listarEmprestimos().size() - 1;
                     JLabel empri = new JLabel();
                     empri.setBorder(BorderFactory.createRaisedBevelBorder());
@@ -240,6 +243,8 @@ public class GUI implements ActionListener {
             Emprestimo emprs = ((JButtonDevolucao) e.getSource()).empres;
             try {
                 library.registrarDevolucao(emprs.getLivro().getTitulo(), LocalDate.now());
+                atualizarContadorGeral();
+                atualizarPainelUsuarios();
                 Component[] components = panel_empres.getComponents();
                 ArrayList<Component> componentList = new ArrayList<>(Arrays.asList(components));
                 int idx = componentList.indexOf((JButtonDevolucao) e.getSource());
@@ -368,6 +373,13 @@ public class GUI implements ActionListener {
         moarBook.setFont(new Font("Arial", Font.BOLD, 20));
         moarBook.addActionListener(this);
         panel_livros.add(moarBook);
+
+        livTotalEmprestimos = new JLabel();
+        livTotalEmprestimos.setFont(new Font("Arial", Font.PLAIN, 20));
+        livTotalEmprestimos.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+        panel_livros.add(livTotalEmprestimos);
+        atualizarContadorGeral();
+
         for (Livro i : library.listarLivros()) {
             JLabel booki = new JLabel();
             booki.setIcon(defaultBook);
@@ -403,11 +415,14 @@ public class GUI implements ActionListener {
         for (Pessoa i : library.listarUsuarios()) {
             JLabel useri = new JLabel();
             useri.setIcon(randomAvatar());
+
             if(i instanceof Aluno){
                 fill="<br>Matricula: "+((Aluno)i).getMatricula();}
             else if(i instanceof Professor){
                 fill="<br>Departamento: "+((Professor)i).getDepartamento().getNomeFormatado();}
-            useri.setText("<html><pre>Nome: "+i.getNome()+"\t\tOcupação: "+i.getClass().getSimpleName()+"<br>CPF: "+i.getCpf()+"\t\tEmail: "+i.getEmail()+fill+"</pre></html>");
+            
+            int emprestimosAtivos = i.getNumeroEmprestimosAtivos();
+            useri.setText("<html><pre>Nome: "+i.getNome()+"\t\tOcupação: "+i.getClass().getSimpleName()+"<br>CPF: "+i.getCpf()+"\t\tEmail: "+i.getEmail()+fill+ "\t\tEmpréstimos Ativos: " + emprestimosAtivos + "</pre></html>");
             useri.setFont(new Font("Arial",Font.PLAIN,20));
             useri.setPreferredSize(new Dimension(1200,100));
             JButtonHistorico buttoni=new JButtonHistorico(i);
@@ -473,5 +488,46 @@ public class GUI implements ActionListener {
         frame.add(scroll_empres);
         frame.add(scroll_usuarios);
         frame.add(scroll_livros);
+    }
+
+    private void atualizarContadorGeral(){
+        int total  = Emprestimo.getTotalEmprestimosRealizados();
+        livTotalEmprestimos.setText("Total de empréstimos realizados na biblioteca: " + total);
+    }
+
+    private void atualizarPainelUsuarios() {
+        panel_usuarios.removeAll();
+
+        panel_usuarios.add(moarPpl);
+        panel_usuarios.add(button_editar);
+
+        String fill = new String();
+        for (Pessoa i : library.listarUsuarios()) {
+            JLabel useri = new JLabel();
+            useri.setIcon(randomAvatar());
+
+            if (i instanceof Aluno) {
+                fill = "<br>Matricula: " + ((Aluno) i).getMatricula();
+            } else if (i instanceof Professor) {
+                fill = "<br>Departamento: " + ((Professor) i).getDepartamento().getNomeFormatado();
+            }
+
+            int emprestimosAtivos = i.getNumeroEmprestimosAtivos();
+            useri.setText("<html><pre>Nome: "+i.getNome()+"\t\tOcupação: "+i.getClass().getSimpleName()+"<br>CPF: "+i.getCpf()+"\t\tEmail: "+i.getEmail()+fill+ "\t\tEmpréstimos Ativos: " + emprestimosAtivos + "</pre></html>");
+            
+            useri.setFont(new Font("Arial", Font.PLAIN, 20));
+            useri.setPreferredSize(new Dimension(1200, 120));
+            
+            JButtonHistorico buttoni = new JButtonHistorico(i);
+            buttoni.setText("Emprestimos atuais");
+            buttoni.setPreferredSize(new Dimension(200, 100));
+            buttoni.addActionListener(this);
+            
+            panel_usuarios.add(useri);
+            panel_usuarios.add(buttoni);
+        }
+
+        panel_usuarios.revalidate();
+        panel_usuarios.repaint();
     }
 }

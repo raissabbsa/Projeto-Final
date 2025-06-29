@@ -46,4 +46,8 @@ public abstract class Pessoa {
     }
 
     public abstract int getLimiteEmprestimos();
+    
+    public int getNumeroEmprestimosAtivos() {
+        return this.historicoEmprestimos.size();
+    }
 }
