@@ -1,4 +1,4 @@
-1984,George Orwell,1949,false
+1984,George Orwell,1949,true
 Dom Casmurro,Machado de Assis,1899,true
 O Alienista,Machado de Assis,1882,false
 O Senhor dos Anéis,J.R.R. Tolkien,1954,true
