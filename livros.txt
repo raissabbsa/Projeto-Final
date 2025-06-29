@@ -8,7 +8,7 @@ O Pequeno Príncipe,Antoine de Saint-Exupéry,1943,true
 Crime e Castigo,Fiódor Dostoiévski,1866,true
 Orgulho e Preconceito,Jane Austen,1813,true
 O Nome da Rosa,Umberto Eco,1980,true
-Memórias Póstumas de Brás Cubas,Machado de Assis,1881,false
+Memórias Póstumas de Brás Cubas,Machado de Assis,1881,true
 O Cortiço,Aluísio Azevedo,1890,true
 O Hobbit,J.R.R. Tolkien,1937,true
 Moby Dick,Herman Melville,1851,true
@@ -18,3 +18,4 @@ Dom Quixote,Miguel de Cervantes,1605,true
 A Metamorfose,Franz Kafka,1915,true
 Grande Sertão: Veredas,João Guimarães Rosa,1956,true
 Senhora,José de Alencar,1875,true
+O conde enfeitiçado: O livro de Francesca ,Julia Quinn,2015,true
