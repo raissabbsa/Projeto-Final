@@ -186,7 +186,7 @@ public class GUI implements ActionListener {
             myPanel.add(new JLabel("Livro:"));
             myPanel.add(xField);
             myPanel.add(Box.createHorizontalStrut(15));
-            myPanel.add(new JLabel("Usuario:"));
+            myPanel.add(new JLabel("Usuario (CPF):"));
             myPanel.add(yField);
 
             int result = JOptionPane.showOptionDialog(null, myPanel, "Cadastre o livro:", JOptionPane.OK_CANCEL_OPTION,
@@ -368,6 +368,7 @@ public class GUI implements ActionListener {
         moarBook.setFont(new Font("Arial", Font.BOLD, 20));
         moarBook.addActionListener(this);
         panel_livros.add(moarBook);
+        panel_livros.add(Box.createRigidArea(new Dimension(0, 20)));
         for (Livro i : library.listarLivros()) {
             JLabel booki = new JLabel();
             booki.setIcon(defaultBook);
@@ -380,6 +381,7 @@ public class GUI implements ActionListener {
                 booki.setEnabled(false);
             }
             panel_livros.add(booki);
+            panel_livros.add(Box.createRigidArea(new Dimension(0, 20)));
             panel_livros.revalidate();
             panel_livros.repaint();
         }
