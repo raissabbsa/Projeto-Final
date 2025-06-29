@@ -113,8 +113,15 @@ classDiagram
         -String nome
         -String cpf
         -String email
-        -int emprestimosAtivos
+        -List~Emprestimo~ historicoEmprestimos
 
+        +String getNome()
+        +String getCpf()
+        +String getEmail()
+        +void adicionarEmprestimo(Emprestimo)
+        +void removerEmprestimo(Emprestimo)
+        +List~Emprestimo~ getHistoricoEmprestimos()
+        +abstract int getLimiteEmprestimos()
         +String toString()
     }
 
@@ -122,50 +129,51 @@ classDiagram
         -String matricula
         -TipoUsuario tipoUsuario
 
-        +int emprestimosRestantes()
+        +int getLimiteEmprestimos()
     }
 
     class Professor {
-        -String departamento
+        -Departamento departamento
         -TipoUsuario tipoUsuario
 
-        +int emprestimosRestantes()
+        +int getLimiteEmprestimos()
     }
 
     class Livro {
         -String titulo
         -String autor
-        -String anoPublicacao
+        -int anoPublicacao
         -boolean disponivel
 
         +void emprestar()
         +void devolver()
+        +String toString()
     }
 
     class Emprestimo {
         -Livro livro
         -Pessoa usuario
-        -String dataEmprestimo
-        -String dataPrevista
-        -String dataDevolucao
-        -int multa
+        -LocalDate dataEmprestimo
+        -LocalDate dataPrevista
 
-        +int calcularMulta()
-        +boolean isAtrasado()
+        +boolean isAtrasado(LocalDate)
+        +double calcularMulta(LocalDate)
+        +String toString()
     }
 
     class Biblioteca {
-        -ArrayList[Pessoa] listaUsuarios
-        -ArrayList[Livro] listaLivros
-        -ArrayList[Emprestimo] listaEmprestimos
+        -List~Pessoa~ usuarios
+        -List~Livro~ livros
+        -List~Emprestimo~ emprestimos
 
-        +void cadastrarUsuario()
-        +void cadastrarLivro()
-        +Emprestimo realizarEmprestimo()
-        +void registrarDevolucao
-        +void ordenarPorTitulo
-        +void ordenarPorAno
-        +void buscarPorTitulo
+        +void cadastrarUsuario(Pessoa)
+        +void removerUsuario(String cpf)
+        +void editarUsuario(String cpf, String novoNome, String novoEmail, String novoExtra)
+        +void cadastrarLivro(Livro)
+        +void removerLivro(String titulo)
+        +void realizarEmprestimo(String titulo, Pessoa)
+        +void registrarDevolucao(String titulo, LocalDate)
+        +List~Livro~ pesquisarPorTitulo(String)
     }
 
     class TipoUsuario {
@@ -174,14 +182,41 @@ classDiagram
         PROFESSOR
     }
 
-    Pessoa <|-- Aluno : herança
-    Pessoa <|-- Professor : herança
-    Emprestimo <-- Livro : associação
-    Emprestimo <-- Pessoa: associação
-    Biblioteca o-- Pessoa: agregação
-    Biblioteca o-- Livro: agregação
-    Biblioteca o-- Emprestimo: agregação
-    Aluno .. TipoUsuario
-    Professor .. TipoUsuario
+    class Departamento {
+        <<Enum>>
+        ENGENHARIA_DA_COMPUTACAO
+        MATEMATICA
+        FISICA
+        LINGUAS
+    }
+
+    class Multavel {
+        <<Interface>>
+        +double calcularMulta(LocalDate)
+    }
+
+    class LivroIndisponivelException {
+        <<Exception>>
+    }
+
+    class UsuarioNaoCadastradoException {
+        <<Exception>>
+    }
+
+    class NenhumLivroEncontradoException {
+        <<Exception>>
+    }
+
+    Pessoa <|-- Aluno
+    Pessoa <|-- Professor
+    Emprestimo --> Livro
+    Emprestimo --> Pessoa
+    Emprestimo ..|> Multavel
+    Biblioteca o-- Pessoa
+    Biblioteca o-- Livro
+    Biblioteca o-- Emprestimo
+    Professor --> Departamento
+    Aluno --> TipoUsuario
+    Professor --> TipoUsuario
 ```
 
