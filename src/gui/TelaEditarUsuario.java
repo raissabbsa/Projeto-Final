@@ -15,9 +15,11 @@ public class TelaEditarUsuario extends JFrame {
     private JLabel labelExtra;
 
     private Biblioteca biblioteca;
+    private GUI gui;
 
-    public TelaEditarUsuario(Biblioteca biblioteca) {
+    public TelaEditarUsuario(Biblioteca biblioteca,GUI gui) {
         this.biblioteca = biblioteca;
+        this.gui=gui;
 
         setTitle("Editar Usuário");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -88,5 +90,6 @@ public class TelaEditarUsuario extends JFrame {
         } catch (UsuarioNaoCadastradoException ex) {
             JOptionPane.showMessageDialog(this, "Erro: " + ex.getMessage());
         }
+        gui.editarUsuario(cpf,nome,email,extra);
     }
 }
