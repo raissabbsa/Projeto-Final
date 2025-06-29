@@ -12,7 +12,7 @@ import models.*;
 
 public class GUI implements ActionListener {
     Biblioteca library;
-    JButton moarBook, moarPpl, moarEmp, button_livros, button_usuarios, button_empres, button_editar;
+    JButton moarBook, moarPpl, moarEmp, button_livros, button_usuarios, button_empres, button_editar, button_remover;
     JRadioButton alun, prof;
     JPanel panel_livros, panel_usuarios, panel_empres, panel_alterar_usuario;
     JScrollPane scroll_livros, scroll_usuarios, scroll_empres;
@@ -134,7 +134,7 @@ public class GUI implements ActionListener {
             myPanel.add(yField);
             myPanel.add(new JLabel("Email:"));
             myPanel.add(zField);
-            myPanel.add(new JLabel("Matricula/Departamento:"));
+            myPanel.add(new JLabel("Matricula:"));
             myPanel.add(wField);
             myPanel.add(deptoCombo);
             
@@ -391,14 +391,22 @@ public class GUI implements ActionListener {
         moarPpl.addActionListener(this);
         panel_usuarios.add(moarPpl);
 
-        String fill = new String();
-
         button_editar = new JButton();
         button_editar.setPreferredSize(new Dimension(250, 100));
         button_editar.setText("Editar Usuário");
         button_editar.setFont(new Font("Arial", Font.BOLD, 20));
         button_editar.addActionListener(e -> new TelaEditarUsuario(library));
         panel_usuarios.add(button_editar);
+
+        button_remover = new JButton();
+        button_remover.setPreferredSize(new Dimension(250, 100));
+        button_remover.setText("Remover Usuário");
+        button_remover.setFont(new Font("Arial", Font.BOLD, 20));
+        button_remover.addActionListener(e -> new TelaRemoverUsuario(library));
+        panel_usuarios.add(button_remover);
+
+
+        String fill = new String();
 
         for (Pessoa i : library.listarUsuarios()) {
             JLabel useri = new JLabel();

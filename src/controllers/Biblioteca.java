@@ -61,8 +61,17 @@ public class Biblioteca {
         usuarios.add(livro);
     }
 
-    public boolean removerUsuario(String titulo) {
-        return usuarios.removeIf(l -> l.getNome().equalsIgnoreCase(titulo));
+    public void removerUsuario(String cpf) throws UsuarioNaoCadastradoException {
+        Pessoa usuario = buscarUsuarioExato(cpf);
+        if (usuario == null) {
+            throw new UsuarioNaoCadastradoException("Usuário não encontrado.");
+        }
+        if (!usuario.getHistoricoEmprestimos().isEmpty()) {
+            System.out.println("Não é possível remover o usuário, pois ele possui empréstimos ativos.");
+            return;
+        }
+        usuarios.remove(usuario);
+        System.out.println("Usuário removido com sucesso: " + usuario.getNome());
     }
 
     public List<Pessoa> listarUsuarios() {
