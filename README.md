@@ -103,7 +103,7 @@ Métodos: cadastrarUsuario(), cadastrarLivro(), realizarEmprestimo(), registrarD
 - Exceção personalizada: LivroIndisponivelException, UsuarioNaoEncontradoException, etc.
 - Utilização de variáveis e métodos estáticos para controle geral (ex: contador de empréstimos)
 
-## Diagrama UML
+## Diagrama UML (Visualizar no Github)
 ```mermaid
 ---
 title: Sistema Bibliotecário
@@ -185,9 +185,15 @@ classDiagram
     class Departamento {
         <<Enum>>
         ENGENHARIA_DA_COMPUTACAO
+        ENGENHARIA_ELETRICA
+        ENGENHARIA_MECANICA
+        MEDICINA
         MATEMATICA
+        LETRAS
+        HISTORIA
         FISICA
-        LINGUAS
+        QUIMICA
+        ARTES
     }
 
     class Multavel {
@@ -204,6 +210,14 @@ classDiagram
     }
 
     class NenhumLivroEncontradoException {
+        <<Exception>>
+    }
+
+    class NenhumEmprestimoEncontradoException {
+        <<Exception>>
+    }
+
+    class LimiteEmprestimosException {
         <<Exception>>
     }
 
