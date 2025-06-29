@@ -10,40 +10,27 @@ public class Emprestimo implements Multavel {
     private Pessoa usuario;
     private LocalDate dataEmprestimo;
     private LocalDate dataPrevista;
+    private boolean ativo = true; 
 
     public Emprestimo(Livro livro, Pessoa usuario, LocalDate dataEmprestimo, LocalDate dataPrevista) {
         this.livro = livro;
         this.usuario = usuario;
         this.dataEmprestimo = dataEmprestimo;
         this.dataPrevista = dataPrevista;
-        totalEmprestimosRealizados++;
+        this.ativo = true; // Define o empréstimo como ativo ao ser criado
     }
 
-    public Livro getLivro() {
-        return livro;
+    public Livro getLivro(){return livro;}
+    public Pessoa getUsuario(){return usuario;}
+    public LocalDate getDataEmprestimo(){return dataEmprestimo;}
+    public LocalDate getDataPrevista(){return dataPrevista;}
+    public boolean isAtrasado(LocalDate dataDevolucaoReal){return dataDevolucaoReal.isAfter(dataPrevista);}
+    public boolean isAtivo() {
+        return ativo;
     }
-
-    public Pessoa getUsuario() {
-        return usuario;
+    public void finalizarEmprestimo() {
+        this.ativo = false;
     }
-
-    public LocalDate getDataEmprestimo() {
-        return dataEmprestimo;
-    }
-
-    public LocalDate getDataPrevista() {
-        return dataPrevista;
-    }
-    
-    public static int getTotalEmprestimosRealizados() {
-        return totalEmprestimosRealizados;
-    }
-
-    public boolean isAtrasado(LocalDate dataDevolucaoReal) {
-        return dataDevolucaoReal.isAfter(dataPrevista);
-    }
-
-    @Override
     public double calcularMulta(LocalDate dataDevolucaoReal) {
         if (isAtrasado(dataDevolucaoReal)) {
             long diasAtraso = ChronoUnit.DAYS.between(dataPrevista, dataDevolucaoReal);

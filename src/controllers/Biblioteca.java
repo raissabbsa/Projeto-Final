@@ -126,9 +126,8 @@ public class Biblioteca {
             throws NenhumEmprestimoEncontradoException {
         for (Emprestimo emp : emprestimos) {
             if (emp.getLivro().getTitulo().equalsIgnoreCase(tituloLivro)) {
-                emp.getLivro().devolver();
-                double multa = emp.calcularMulta(dataDevolucao);
-                emprestimos.remove(emp);
+                emp.getLivro().devolver();                
+                emp.finalizarEmprestimo(); 
                 return;
             }
         }
@@ -214,9 +213,11 @@ public class Biblioteca {
             for (Emprestimo e : emprestimos) {
                 bw.write(
                         e.getLivro().getTitulo() + "," +
-                                e.getUsuario().getCpf() + "," +
-                                e.getDataEmprestimo() + "," +
-                                e.getDataPrevista());
+                        e.getUsuario().getCpf() + "," +
+                        e.getDataEmprestimo() + "," +
+                        e.getDataPrevista() + "," +
+                        e.isAtivo()
+                );
                 bw.newLine();
             }
         } catch (IOException e) {
