@@ -1,9 +1,7 @@
 package gui;
 
 import controllers.*;
-import exceptions.LimiteEmprestimosException;
-import exceptions.NenhumLivroEncontradoException;
-import exceptions.UsuarioNaoCadastradoException;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.time.LocalDate;
@@ -19,6 +17,8 @@ public class GUI implements ActionListener{
     JRadioButton alun,prof;
     JPanel panel_livros,panel_usuarios,panel_empres;
     JScrollPane scroll_livros,scroll_usuarios,scroll_empres;
+    JTextField campoBuscaLivro;
+    JButton botaoBuscarLivro;
     ImageIcon blank=new ImageIcon("gui/blank.png"),defaultBook=new ImageIcon("gui/default_book.png"),missingBook=new ImageIcon("gui/missing_book.png");
     boolean select1;
 
@@ -44,6 +44,22 @@ public class GUI implements ActionListener{
             panel_usuarios.setVisible(false);
             panel_empres.setVisible(true);
             panel_livros.setVisible(false);}
+        if(e.getSource() == botaoBuscarLivro){
+            String titulo = campoBuscaLivro.getText();
+            try {
+                Livro livro = library.buscarLivroExato(titulo);
+                JOptionPane.showMessageDialog(null, 
+                    "Livro encontrado:\nTítulo: " + livro.getTitulo() + 
+                    "\nAutor: " + livro.getAutor() + 
+                    "\nAno: " + livro.getAnoPublicacao(), 
+                    "Resultado da busca", JOptionPane.INFORMATION_MESSAGE);
+            } catch (NenhumLivroEncontradoException ex) {
+                JOptionPane.showMessageDialog(null, 
+                    "Livro não encontrado!", 
+                    "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+            return;
+        }
         else if(e.getSource()==moarBook){
             JTextField xField = new JTextField(5);
             JTextField yField = new JTextField(5);
@@ -78,14 +94,33 @@ public class GUI implements ActionListener{
             JTextField xField = new JTextField(5);
             JTextField yField = new JTextField(5);
             JTextField zField = new JTextField(5);
-            JTextField wField = new JTextField(5);
-            alun=new JRadioButton("Aluno");
-            prof=new JRadioButton("Docente");
+            
+            JTextField wField = new JTextField(15);
+            JComboBox <Departamento> deptoCombo = new JComboBox<>(Departamento.values());
+            deptoCombo.setRenderer(new DefaultListCellRenderer(){
+                @Override
+                public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus){
+                    super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                    if (value instanceof Departamento) {
+                        setText(((Departamento) value).getNomeFormatado());
+                    }
+                    return this;
+                }
+            });
+
+            JRadioButton alun =new JRadioButton("Aluno");
+            JRadioButton prof=new JRadioButton("Docente");
             ButtonGroup alunfessor=new ButtonGroup();
             alun.addActionListener(this);
             prof.addActionListener(this);
             alunfessor.add(alun);
             alunfessor.add(prof);
+
+            deptoCombo.setVisible(false);
+            
+            alun.addActionListener(evento -> { wField.setVisible(true); deptoCombo.setVisible(false);});
+            prof.addActionListener(evento -> { wField.setVisible(false); deptoCombo.setVisible(true); });
+
 
             JPanel myPanel = new JPanel();
             myPanel.setLayout(new GridLayout(3,9));
@@ -99,38 +134,41 @@ public class GUI implements ActionListener{
             myPanel.add(zField);
             myPanel.add(new JLabel("Matricula/Departamento:"));
             myPanel.add(wField);
+            myPanel.add(deptoCombo);
             
             int result = JOptionPane.showOptionDialog(null, myPanel, "Cadastre o usuario:", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, blank, null, 0);
             if (result == JOptionPane.OK_OPTION) {
                 int maxidx=library.listarUsuarios().size();
-                if(select1){
-                Aluno newaluno=new Aluno(xField.getText(),yField.getText(),zField.getText(),wField.getText());
-                library.cadastrarUsuario(newaluno);
-                JLabel newppl=new JLabel();
-                newppl.setIcon(randomAvatar());
-                newppl.setText("<html><pre>Nome: "+newaluno.getNome()+"\t\tOcupação: "+newaluno.getClass().getSimpleName()+"<br>CPF: "+newaluno.getCpf()+"\t\tEmail: "+newaluno.getEmail()+"<br>Matricula: "+newaluno.getMatricula()+"</pre></html>");
-                newppl.setFont(new Font("Arial",Font.PLAIN,20));
-                newppl.setPreferredSize(new Dimension(1200,100));
-                panel_usuarios.add(newppl);
-                JButtonHistorico buttoni=new JButtonHistorico(newaluno);
-                buttoni.setText("Historico de emprestimos");
-                buttoni.setPreferredSize(new Dimension(200,100));
-                buttoni.addActionListener(this);
-                panel_usuarios.add(buttoni);}
+                if(alun.isSelected()){
+                    Aluno newaluno=new Aluno(xField.getText(),yField.getText(),zField.getText(),wField.getText());
+                    library.cadastrarUsuario(newaluno);
+                    JLabel newppl=new JLabel();
+                    newppl.setIcon(randomAvatar());
+                    newppl.setText("<html><pre>Nome: "+newaluno.getNome()+"\t\tOcupação: "+newaluno.getClass().getSimpleName()+"<br>CPF: "+newaluno.getCpf()+"\t\tEmail: "+newaluno.getEmail()+"<br>Matricula: "+newaluno.getMatricula()+"</pre></html>");
+                    newppl.setFont(new Font("Arial",Font.PLAIN,20));
+                    newppl.setPreferredSize(new Dimension(1200,100));
+                    panel_usuarios.add(newppl);
+                    JButtonHistorico buttoni=new JButtonHistorico(newaluno);
+                    buttoni.setText("Historico de emprestimos");
+                    buttoni.setPreferredSize(new Dimension(200,100));
+                    buttoni.addActionListener(this);
+                    panel_usuarios.add(buttoni);}
                 else{
-                Professor newaluno=new Professor(xField.getText(),yField.getText(),zField.getText(),wField.getText());
-                library.cadastrarUsuario(newaluno);
-                JLabel newppl=new JLabel();
-                newppl.setIcon(randomAvatar());
-                newppl.setText("<html><pre>Nome: "+newaluno.getNome()+"\t\tOcupação: "+newaluno.getClass().getSimpleName()+"<br>CPF: "+newaluno.getCpf()+"\t\tEmail: "+newaluno.getEmail()+"<br>Departamento: "+newaluno.getDepartamento()+"<pre/></html>");
-                newppl.setFont(new Font("Arial",Font.PLAIN,20));
-                newppl.setPreferredSize(new Dimension(1200,100));
-                panel_usuarios.add(newppl);
-                JButtonHistorico buttoni=new JButtonHistorico(newaluno);
-                buttoni.setText("Historico de emprestimos");
-                buttoni.setPreferredSize(new Dimension(200,100));
-                buttoni.addActionListener(this);
-                panel_usuarios.add(buttoni);}
+                    Departamento departamento = (Departamento) deptoCombo.getSelectedItem();
+
+                    Professor newaluno=new Professor(xField.getText(),yField.getText(),zField.getText(),departamento);
+                    library.cadastrarUsuario(newaluno);
+                    JLabel newppl=new JLabel();
+                    newppl.setIcon(randomAvatar());
+                    newppl.setText("<html><pre>Nome: "+newaluno.getNome()+"\t\tOcupação: "+newaluno.getClass().getSimpleName()+"<br>CPF: "+newaluno.getCpf()+"\t\tEmail: "+newaluno.getEmail()+"<br>Departamento: "+newaluno.getDepartamento().getNomeFormatado()+"<pre/></html>");
+                    newppl.setFont(new Font("Arial",Font.PLAIN,20));
+                    newppl.setPreferredSize(new Dimension(1200,100));   
+                    panel_usuarios.add(newppl);
+                    JButtonHistorico buttoni=new JButtonHistorico(newaluno);
+                    buttoni.setText("Historico de emprestimos");
+                    buttoni.setPreferredSize(new Dimension(200,100));
+                    buttoni.addActionListener(this);
+                    panel_usuarios.add(buttoni);}
             }
             panel_usuarios.setVisible(false);
             panel_usuarios.setVisible(true);
@@ -164,7 +202,7 @@ public class GUI implements ActionListener{
                     buttoni.addActionListener(this);
                     panel_empres.add(empri);
                     panel_empres.add(buttoni);
-                    panel_livros.getComponent(library.listarLivros().indexOf(library.buscarLivroExato(xField.getText()))+1).setEnabled(false);
+                    panel_livros.getComponent(library.listarLivros().indexOf(library.buscarLivroExato(xField.getText()))+2).setEnabled(false);
                 }
                 catch(NenhumLivroEncontradoException a){
                     JOptionPane.showMessageDialog(null,"Livro nao encontrado", null, JOptionPane.OK_OPTION,null);
@@ -196,7 +234,7 @@ public class GUI implements ActionListener{
             int idx = componentList.indexOf((JButtonDevolucao)e.getSource());
             panel_empres.remove((JButtonDevolucao)e.getSource());
             panel_empres.remove(idx-1);
-            panel_livros.getComponent(library.listarLivros().indexOf(emprs.getLivro())+1).setEnabled(true);
+            panel_livros.getComponent(library.listarLivros().indexOf(emprs.getLivro())+2).setEnabled(true);
             panel_empres.setVisible(false);
             panel_empres.setVisible(true);
             JOptionPane.showMessageDialog(null,"Multa calculada: R$"+emprs.calcularMulta(LocalDate.now()), "Devolução concluida", JOptionPane.OK_OPTION,blank);
@@ -271,6 +309,18 @@ public class GUI implements ActionListener{
         button_empres.addActionListener(this);
         panel_menus.add(button_empres);
 
+        JPanel painelBusca = new JPanel();
+        painelBusca.setAlignmentX(Component.LEFT_ALIGNMENT);
+        painelBusca.setPreferredSize(new Dimension(240,100));
+        painelBusca.add(new JLabel("Buscar livro pelo título:"));
+        campoBuscaLivro = new JTextField(20);
+        painelBusca.add(campoBuscaLivro);
+        botaoBuscarLivro = new JButton("Buscar Livro");
+        botaoBuscarLivro.setFont(new Font("Arial", Font.BOLD, 20));
+        botaoBuscarLivro.addActionListener(this);
+        painelBusca.add(botaoBuscarLivro);
+        panel_livros.add(painelBusca);
+
         moarBook=new JButton();
         moarBook.setPreferredSize(new Dimension(240,100));
         moarBook.setText("Adicionar Livro");
@@ -286,6 +336,8 @@ public class GUI implements ActionListener{
             booki.setPreferredSize(new Dimension(1200,100));
             if (!i.isDisponivel()){booki.setEnabled(false);}
             panel_livros.add(booki);
+            panel_livros.revalidate();
+            panel_livros.repaint();
         }
         
         moarPpl=new JButton();
@@ -301,7 +353,7 @@ public class GUI implements ActionListener{
             if(i instanceof Aluno){
                 fill="<br>Matricula: "+((Aluno)i).getMatricula();}
             else if(i instanceof Professor){
-                fill="<br>Departamento: "+((Professor)i).getDepartamento();}
+                fill="<br>Departamento: "+((Professor)i).getDepartamento().getNomeFormatado();}
             useri.setText("<html><pre>Nome: "+i.getNome()+"\t\tOcupação: "+i.getClass().getSimpleName()+"<br>CPF: "+i.getCpf()+"\t\tEmail: "+i.getEmail()+fill+"</pre></html>");
             useri.setFont(new Font("Arial",Font.PLAIN,20));
             useri.setPreferredSize(new Dimension(1200,100));
