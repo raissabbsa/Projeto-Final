@@ -152,7 +152,7 @@ public class GUI implements ActionListener {
                     newppl.setPreferredSize(new Dimension(1200,100));
                     panel_usuarios.add(newppl);
                     JButtonHistorico buttoni=new JButtonHistorico(newaluno);
-                    buttoni.setText("Emprestimos atuais");
+                    buttoni.setText("Historico de emprestimos");
                     buttoni.setPreferredSize(new Dimension(200,100));
                     buttoni.addActionListener(this);
                     panel_usuarios.add(buttoni);}
@@ -168,7 +168,7 @@ public class GUI implements ActionListener {
                     newppl.setPreferredSize(new Dimension(1200,100));   
                     panel_usuarios.add(newppl);
                     JButtonHistorico buttoni=new JButtonHistorico(newaluno);
-                    buttoni.setText("Emprestimos atuais");
+                    buttoni.setText("Historico de emprestimos");
                     buttoni.setPreferredSize(new Dimension(200,100));
                     buttoni.addActionListener(this);
                     panel_usuarios.add(buttoni);}
@@ -462,7 +462,7 @@ public class GUI implements ActionListener {
             useri.setFont(new Font("Arial",Font.PLAIN,20));
             useri.setPreferredSize(new Dimension(1200,100));
             JButtonHistorico buttoni=new JButtonHistorico(i);
-            buttoni.setText("Emprestimos atuais");
+            buttoni.setText("Historico de emprestimos");
             buttoni.setPreferredSize(new Dimension(200, 100));
             buttoni.addActionListener(this);
             panel_usuarios.add(useri);
@@ -555,7 +555,7 @@ public class GUI implements ActionListener {
             useri.setPreferredSize(new Dimension(1200, 120));
             
             JButtonHistorico buttoni = new JButtonHistorico(i);
-            buttoni.setText("Emprestimos atuais");
+            buttoni.setText("Historico de emprestimos");
             buttoni.setPreferredSize(new Dimension(200, 100));
             buttoni.addActionListener(this);
             
