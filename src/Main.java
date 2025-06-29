@@ -15,41 +15,36 @@ public class Main {
         Livro l2 = new Livro("Dom Casmurro", "Machado de Assis", 1899);
         Livro l3 = new Livro("O Alienista", "Machado de Assis", 1882);
         Livro l4 = new Livro("O Senhor dos Anéis", "J.R.R. Tolkien", 1954);
-        Livro l5 = new Livro("Harry Potter e a Pedra Filosofal", "J. K. Rowling", 2018);
+        Livro l5 = new Livro("Orgulho e Preconceito", "Jane Austen", 1813);
+        Livro l6 = new Livro("Pensando em Java", "Brucke Eckel", 1998);
+        Livro l7 = new Livro("Hamlet", "William Shakespeare", 1623);
+        Livro l8 = new Livro("O Pequeno Príncipe", "Antoine de Saint-Exupéry", 1943);
+        Livro l9 = new Livro("Cálculo: Volume 1", "James Stewart", 2005);
+
 
         biblioteca.cadastrarLivro(l1);
         biblioteca.cadastrarLivro(l2);
         biblioteca.cadastrarLivro(l3);
         biblioteca.cadastrarLivro(l4);
         biblioteca.cadastrarLivro(l5);
+        biblioteca.cadastrarLivro(l6);
+        biblioteca.cadastrarLivro(l7);
+        biblioteca.cadastrarLivro(l8);
+        biblioteca.cadastrarLivro(l9);
 
         biblioteca.cadastrarUsuario(aluno_carlos);
         biblioteca.cadastrarUsuario(professor_ana);
 
         try {
-            biblioteca.realizarEmprestimo("1982", aluno_carlos.getCpf());
+            biblioteca.realizarEmprestimo("Dom Casmurro", aluno_carlos.getCpf());
+            biblioteca.realizarEmprestimo("O Senhor dos Anéis", aluno_carlos.getCpf());
+            biblioteca.realizarEmprestimo("Cálculo: Volume 1", professor_ana.getCpf());
         }
         catch (exceptions.UsuarioNaoCadastradoException |
                 exceptions.NenhumLivroEncontradoException |
                 exceptions.LivroIndisponivelException |
                 exceptions.LimiteEmprestimosException e) {
         }
-
-        // Cadastrar e emprestar 4 livros
-        for (int i = 1; i <= 4; i++) {
-            Livro livro = new Livro("Livro " + i, "Autor", 2023);
-            biblioteca.cadastrarLivro(livro);
-            try {
-                biblioteca.realizarEmprestimo("Livro " + i, aluno_carlos.getCpf());
-            } 
-            catch (exceptions.UsuarioNaoCadastradoException |
-                    exceptions.NenhumLivroEncontradoException |
-                    exceptions.LivroIndisponivelException |
-                    exceptions.LimiteEmprestimosException e) {
-            }
-        }
-
-        aluno_carlos.exibirHistorico();
 
         new GUI(biblioteca);
     }

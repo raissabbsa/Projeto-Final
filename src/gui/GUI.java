@@ -180,7 +180,7 @@ public class GUI implements ActionListener{
                     buttoni.addActionListener(this);
                     panel_empres.add(empri);
                     panel_empres.add(buttoni);
-                    panel_livros.getComponent(library.listarLivros().indexOf(library.buscarLivroExato(xField.getText()))+1).setEnabled(false);
+                    panel_livros.getComponent(library.listarLivros().indexOf(library.buscarLivroExato(xField.getText()))+2).setEnabled(false);
                 }
                 catch(NenhumLivroEncontradoException a){
                     JOptionPane.showMessageDialog(null,"Livro nao encontrado", null, JOptionPane.OK_OPTION,null);
@@ -212,7 +212,7 @@ public class GUI implements ActionListener{
             int idx = componentList.indexOf((JButtonDevolucao)e.getSource());
             panel_empres.remove((JButtonDevolucao)e.getSource());
             panel_empres.remove(idx-1);
-            panel_livros.getComponent(library.listarLivros().indexOf(emprs.getLivro())+1).setEnabled(true);
+            panel_livros.getComponent(library.listarLivros().indexOf(emprs.getLivro())+2).setEnabled(true);
             panel_empres.setVisible(false);
             panel_empres.setVisible(true);
             JOptionPane.showMessageDialog(null,"Multa calculada: R$"+emprs.calcularMulta(LocalDate.now()), "Devolução concluida", JOptionPane.OK_OPTION,blank);
