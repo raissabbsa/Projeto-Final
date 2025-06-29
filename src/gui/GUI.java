@@ -140,9 +140,19 @@ public class GUI implements ActionListener {
             
             int result = JOptionPane.showOptionDialog(null, myPanel, "Cadastre o usuario:", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, blank, null, 0);
             if (result == JOptionPane.OK_OPTION) {
-                int maxidx=library.listarUsuarios().size();
+                if (!alun.isSelected() && !prof.isSelected()) {
+                    JOptionPane.showMessageDialog(null, "Selecione se o usuário é Aluno ou Professor!");
+                    return;
+                }
                 if(alun.isSelected()){
                     Aluno newaluno=new Aluno(xField.getText(),yField.getText(),zField.getText(),wField.getText());
+                    if (xField.getText().trim().isEmpty() ||
+                        yField.getText().trim().isEmpty() ||
+                        zField.getText().trim().isEmpty() ||
+                        wField.getText().trim().isEmpty()) {
+                        JOptionPane.showMessageDialog(null, "Preencha todos os campos obrigatórios para Aluno!");
+                        return;
+                    }
                     library.cadastrarUsuario(newaluno);
                     JLabel newppl=new JLabel();
                     newppl.setIcon(randomAvatar());
@@ -157,8 +167,14 @@ public class GUI implements ActionListener {
                     panel_usuarios.add(buttoni);}
                 else{
                     Departamento departamento = (Departamento) deptoCombo.getSelectedItem();
-
                     Professor newaluno=new Professor(xField.getText(),yField.getText(),zField.getText(),departamento);
+                    if (xField.getText().trim().isEmpty() ||
+                        yField.getText().trim().isEmpty() ||
+                        zField.getText().trim().isEmpty() ||
+                        deptoCombo.getSelectedItem() == null) {
+                        JOptionPane.showMessageDialog(null, "Preencha todos os campos obrigatórios para Professor!");
+                        return;
+                    }
                     library.cadastrarUsuario(newaluno);
                     JLabel newppl=new JLabel();
                     newppl.setIcon(randomAvatar());
