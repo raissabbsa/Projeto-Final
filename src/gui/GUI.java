@@ -245,6 +245,7 @@ public class GUI implements ActionListener {
                 library.registrarDevolucao(emprs.getLivro().getTitulo(), LocalDate.now());
                 atualizarContadorGeral();
                 atualizarPainelUsuarios();
+                atualizarPainelLivros();
                 Component[] components = panel_empres.getComponents();
                 ArrayList<Component> componentList = new ArrayList<>(Arrays.asList(components));
                 int idx = componentList.indexOf((JButtonDevolucao) e.getSource());
@@ -565,5 +566,30 @@ public class GUI implements ActionListener {
 
         panel_usuarios.revalidate();
         panel_usuarios.repaint();
+    }
+
+    private void atualizarPainelLivros() {
+        panel_livros.removeAll();
+
+        // Adiciona os botões e campos do topo
+        panel_livros.add(botaoBuscarLivro.getParent());
+        panel_livros.add(moarBook);
+        panel_livros.add(livTotalEmprestimos);
+
+        for (Livro i : library.listarLivros()) {
+            JLabel booki = new JLabel();
+            booki.setIcon(defaultBook);
+            booki.setDisabledIcon(missingBook);
+            booki.setText("<html><pre>Titulo: " + i.getTitulo() + "<br>Autor: " + i.getAutor() + "<br>Ano: "
+                    + i.getAnoPublicacao() + "</pre></html>");
+            booki.setFont(new Font("Arial", Font.PLAIN, 20));
+            booki.setPreferredSize(new Dimension(1200, 100));
+            booki.setEnabled(i.isDisponivel());
+            panel_livros.add(booki);
+            panel_livros.add(Box.createRigidArea(new Dimension(0, 20)));
+        }
+
+        panel_livros.revalidate();
+        panel_livros.repaint();
     }
 }
