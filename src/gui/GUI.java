@@ -12,7 +12,7 @@ import models.*;
 
 public class GUI implements ActionListener {
     Biblioteca library;
-    JButton moarBook, moarPpl, moarEmp, button_livros, button_usuarios, button_empres, button_editar;
+    JButton moarBook, moarPpl, moarEmp, button_livros, button_usuarios, button_empres, button_editar, button_remover;
     JRadioButton alun, prof;
     JPanel panel_livros, panel_usuarios, panel_empres, panel_alterar_usuario;
     JScrollPane scroll_livros, scroll_usuarios, scroll_empres;
@@ -135,7 +135,7 @@ public class GUI implements ActionListener {
             myPanel.add(yField);
             myPanel.add(new JLabel("Email:"));
             myPanel.add(zField);
-            myPanel.add(new JLabel("Matricula/Departamento:"));
+            myPanel.add(new JLabel("Matricula:"));
             myPanel.add(wField);
             myPanel.add(deptoCombo);
             
@@ -187,7 +187,7 @@ public class GUI implements ActionListener {
             myPanel.add(new JLabel("Livro:"));
             myPanel.add(xField);
             myPanel.add(Box.createHorizontalStrut(15));
-            myPanel.add(new JLabel("Usuario:"));
+            myPanel.add(new JLabel("Usuario (CPF):"));
             myPanel.add(yField);
 
             int result = JOptionPane.showOptionDialog(null, myPanel, "Cadastre o livro:", JOptionPane.OK_CANCEL_OPTION,
@@ -217,13 +217,13 @@ public class GUI implements ActionListener {
                     panel_livros.getComponent(library.listarLivros().indexOf(library.buscarLivroExato(xField.getText()))+2).setEnabled(false);
                 }
                 catch(NenhumLivroEncontradoException a){
-                    JOptionPane.showMessageDialog(null,"Livro nao encontrado", null, JOptionPane.OK_OPTION,null);
+                    JOptionPane.showMessageDialog(null,"Nenhum livro encontrado", null, JOptionPane.OK_OPTION,null);
                 }
                 catch(LivroIndisponivelException a){
                     JOptionPane.showMessageDialog(null,"Livro indisponivel", null, JOptionPane.OK_OPTION,null);
                 }
                 catch(UsuarioNaoCadastradoException a){
-                    JOptionPane.showMessageDialog(null,"Usuario nao encontrado", null, JOptionPane.OK_OPTION,null);
+                    JOptionPane.showMessageDialog(null,"Usuario nao cadastrado", null, JOptionPane.OK_OPTION,null);
                 }
                 catch(LimiteEmprestimosException a){
                     JOptionPane.showMessageDialog(null,"Usuario atingiu o limite de emprestimos", null, JOptionPane.OK_OPTION,null);
@@ -256,7 +256,7 @@ public class GUI implements ActionListener {
                 JOptionPane.showMessageDialog(null, "Multa calculada: R$" + emprs.calcularMulta(LocalDate.now()),
                         "Devolução concluida", JOptionPane.OK_OPTION, blank);
             } catch (NenhumEmprestimoEncontradoException a) {
-                JOptionPane.showMessageDialog(null, "Emprestimo não encontrado", null, JOptionPane.OK_OPTION, null);
+                JOptionPane.showMessageDialog(null, "Nenhum emprestimo encontrado", null, JOptionPane.OK_OPTION, null);
             }
         }
         else if(e.getSource() instanceof JButtonHistorico){
@@ -313,6 +313,33 @@ public class GUI implements ActionListener {
             return new ImageIcon("src/gui/pfp9.jpg");
         }
         return new ImageIcon("src/gui/default_avatar.jpg");
+    }
+
+    public void removerUsuario(String cpf){
+        try{
+            Pessoa usuario = library.buscarUsuarioExato(cpf);
+            int idx=library.listarUsuarios().indexOf(usuario);
+            panel_usuarios.remove(idx*2+3);
+            panel_usuarios.remove(2*idx+3);
+        }
+        catch(UsuarioNaoCadastradoException a){
+            JOptionPane.showMessageDialog(null,"Usuario nao cadastrado", null, JOptionPane.OK_OPTION,null);
+        }
+    }
+
+    public void editarUsuario(String cpf,String nome,String email,String extra){
+        try{
+            Pessoa usuario = library.buscarUsuarioExato(cpf);
+            int idx=library.listarUsuarios().indexOf(usuario);
+            Component u=panel_usuarios.getComponent(idx*2+3);
+            if (extra.indexOf("R")==0 && extra.indexOf("A")==1){
+                ((JLabel) u).setText("<html><pre>Nome: "+nome+"\t\tOcupação: "+"Aluno"+"<br>CPF: "+cpf+"\t\tEmail: "+email+"<br>Matricula: "+extra+"</pre></html>");
+            }
+            else{((JLabel) u).setText("<html><pre>Nome: "+nome+"\t\tOcupação: "+"Professor"+"<br>CPF: "+cpf+"\t\tEmail: "+email+"<br>Departamento: "+extra+"</pre></html>");}
+        }
+        catch(UsuarioNaoCadastradoException a){
+            JOptionPane.showMessageDialog(null,"Usuario nao cadastrado", null, JOptionPane.OK_OPTION,null);
+        }
     }
 
     public GUI(Biblioteca library) {
@@ -392,6 +419,7 @@ public class GUI implements ActionListener {
                 booki.setEnabled(false);
             }
             panel_livros.add(booki);
+            panel_livros.add(Box.createRigidArea(new Dimension(0, 20)));
             panel_livros.revalidate();
             panel_livros.repaint();
         }
@@ -403,14 +431,22 @@ public class GUI implements ActionListener {
         moarPpl.addActionListener(this);
         panel_usuarios.add(moarPpl);
 
-        String fill = new String();
-
         button_editar = new JButton();
         button_editar.setPreferredSize(new Dimension(250, 100));
         button_editar.setText("Editar Usuário");
         button_editar.setFont(new Font("Arial", Font.BOLD, 20));
-        button_editar.addActionListener(e -> new TelaEditarUsuario(library));
+        button_editar.addActionListener(e -> new TelaEditarUsuario(library,this));
         panel_usuarios.add(button_editar);
+
+        button_remover = new JButton();
+        button_remover.setPreferredSize(new Dimension(250, 100));
+        button_remover.setText("Remover Usuário");
+        button_remover.setFont(new Font("Arial", Font.BOLD, 20));
+        button_remover.addActionListener(e -> new TelaRemoverUsuario(library,this));
+        panel_usuarios.add(button_remover);
+
+
+        String fill = new String();
 
         for (Pessoa i : library.listarUsuarios()) {
             JLabel useri = new JLabel();

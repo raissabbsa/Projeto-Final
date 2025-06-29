@@ -1,4 +1,3 @@
-
 package controllers;
 
 import exceptions.*;
@@ -61,8 +60,16 @@ public class Biblioteca {
         usuarios.add(livro);
     }
 
-    public boolean removerUsuario(String titulo) {
-        return usuarios.removeIf(l -> l.getNome().equalsIgnoreCase(titulo));
+    public void removerUsuario(String cpf) throws UsuarioNaoCadastradoException {
+        Pessoa usuario = buscarUsuarioExato(cpf);
+        if (usuario == null) {
+            throw new UsuarioNaoCadastradoException("Usuário não encontrado.");
+        }
+        if (!usuario.getHistoricoEmprestimos().isEmpty()) {
+            System.out.println("Não é possível remover o usuário, pois ele possui empréstimos ativos.");
+            return;
+        }
+        usuarios.remove(usuario);
     }
 
     public List<Pessoa> listarUsuarios() {
@@ -204,7 +211,6 @@ public class Biblioteca {
     }
 
     public void salvarEmprestimosEmArquivo() {
-        System.out.println("Emprestimos a salvar: " + emprestimos.size());
         try (BufferedWriter bw = new BufferedWriter(new FileWriter("emprestimos.txt"))) {
             for (Emprestimo e : emprestimos) {
                 bw.write(
