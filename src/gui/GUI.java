@@ -135,7 +135,7 @@ public class GUI implements ActionListener {
             myPanel.add(yField);
             myPanel.add(new JLabel("Email:"));
             myPanel.add(zField);
-            myPanel.add(new JLabel("Matricula:"));
+            myPanel.add(new JLabel("Matricula/Departamento:"));
             myPanel.add(wField);
             myPanel.add(deptoCombo);
             
